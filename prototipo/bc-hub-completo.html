@@ -183,8 +183,11 @@ body{
 #site .etapa-txt{color:var(--fumo);line-height:1.7;font-size:14.5px}
 /* imagem larga */
 #site .faixa{position:relative;height:clamp(260px,42vw,520px);overflow:hidden;border-top:1px solid var(--fio);border-bottom:1px solid var(--fio)}
-#site .faixa-img{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(.72) contrast(1.05)}
-#site .faixa-veu{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,9,8,.88),rgba(10,9,8,.35) 55%,rgba(10,9,8,.7))}
+/* A foto dos documentos é clara no meio (papel branco sob luz). O véu
+   anterior caía para 35% justo ali, e o parágrafo — que é cinza — sumia.
+   Escurece a imagem e mantém o véu forte por toda a faixa do texto. */
+#site .faixa-img{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(.6) contrast(1.02) brightness(.5)}
+#site .faixa-veu{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,9,8,.95) 0%,rgba(10,9,8,.9) 44%,rgba(10,9,8,.55) 74%,rgba(10,9,8,.78) 100%)}
 #site .faixa-txt{position:relative;height:100%;display:flex;flex-direction:column;justify-content:center;gap:14px;max-width:640px}
 /* retrato + comissão */
 #site .retrato{position:relative;aspect-ratio:4/5;overflow:hidden;border:1px solid var(--fio)}
