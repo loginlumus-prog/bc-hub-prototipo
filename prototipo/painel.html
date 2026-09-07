@@ -40,8 +40,13 @@ table{border-collapse:collapse;width:100%}
 .marca-nome{font-family:var(--serif);font-size:15.5px;display:block;line-height:1.15}
 .marca-sub{font-size:8px;letter-spacing:.19em;text-transform:uppercase;color:var(--fumo-fraco)}
 
-.grupo{padding:16px 18px 6px;display:flex;align-items:center;gap:7px}
+.grupo{padding:16px 18px 6px;display:flex;align-items:center;gap:7px;width:100%;text-align:left}
 .grupo .quem{margin-left:auto;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--fumo-fraco);border:1px solid var(--fio);padding:1px 5px}
+/* seta de recolher — só existe no celular (ver bloco CELULAR) */
+.seta{display:none;width:7px;height:7px;border-right:1px solid var(--fumo);border-bottom:1px solid var(--fumo);transform:rotate(45deg);transition:transform .2s;flex:0 0 7px;margin-left:auto}
+.grupo .quem + .seta{margin-left:8px}
+.grupo.fechado .seta{transform:rotate(-45deg)}
+.grupo:not([data-ver]) .seta{display:none!important}
 .item{display:flex;align-items:center;gap:9px;width:100%;padding:6.5px 18px;text-align:left;color:var(--fumo);font-size:12.5px;border-left:2px solid transparent;transition:color .16s}
 .item:hover{color:var(--marfim)}
 .item[aria-current="true"]{color:var(--marfim);border-left-color:var(--ouro);background:rgba(242,236,226,.03)}
@@ -271,6 +276,14 @@ body[data-nivel="nucleo"] .item.mod-i{opacity:.28}
   }
   .trilho.aberto{transform:none}
   .item{padding:11px 18px}          /* alvo de toque maior */
+  /* Grupos recolhem. O administrador vê 24 itens — numa tela de celular
+     isso é uma rolagem só, sem hierarquia. Fica aberto o grupo da tela
+     atual; os outros ficam no cabeçalho, a um toque. */
+  .seta{display:block}
+  .grupo{padding:14px 18px 7px;border-top:1px solid var(--fio)}
+  .grupo:first-of-type{border-top:0}
+  .grupo.fechado{padding-bottom:14px}
+  .item.oculto-grupo{display:none}
   .conteudo{padding:20px 15px 56px}
 
   .barra{padding:0 14px;gap:9px;height:50px}
@@ -389,15 +402,15 @@ body[data-nivel="nucleo"] .item.mod-i{opacity:.28}
     <span><span class="marca-nome">BC Hub</span><span class="marca-sub">Plataforma</span></span>
   </div>
 
-  <div class="grupo" data-ver="cliente"><span class="chapeu">Meu caso</span><span class="quem">Cliente</span></div>
+  <button type="button" class="grupo" data-ver="cliente"><span class="chapeu">Meu caso</span><span class="quem">Cliente</span><span class="seta" aria-hidden="true"></span></button>
   <button class="item" data-vai="cli-caso"><i class="pt"></i>Acompanhar</button>
   <button class="item" data-vai="cli-docs"><i class="pt"></i>Meus documentos<span class="cont">5/6</span></button>
   <button class="item" data-vai="cli-contrato"><i class="pt"></i>Meu contrato</button>
 
-  <div class="grupo" data-ver="publico"><span class="chapeu">Cadastro</span><span class="quem">Público</span></div>
+  <button type="button" class="grupo" data-ver="publico"><span class="chapeu">Cadastro</span><span class="quem">Público</span><span class="seta" aria-hidden="true"></span></button>
   <button class="item" data-vai="pub-cadastro"><i class="pt"></i>Criar cadastro</button>
 
-  <div class="grupo" data-ver="indicador admin"><span class="chapeu">Indicador</span><span class="quem">41 pessoas</span></div>
+  <button type="button" class="grupo" data-ver="indicador admin"><span class="chapeu">Indicador</span><span class="quem">41 pessoas</span><span class="seta" aria-hidden="true"></span></button>
   <button class="item" data-vai="ind-painel" aria-current="true"><i class="pt"></i>Meu painel</button>
   <button class="item" data-vai="ind-rede"><i class="pt"></i>Minha rede<span class="cont">14</span></button>
   <button class="item" data-vai="ind-indicados"><i class="pt"></i>Meus indicados<span class="cont">11</span></button>
@@ -405,24 +418,24 @@ body[data-nivel="nucleo"] .item.mod-i{opacity:.28}
   <button class="item" data-vai="ind-material"><i class="pt"></i>Material de divulgação</button>
   <button class="item" data-vai="ind-dados"><i class="pt"></i>Meus dados</button>
 
-  <div class="grupo" data-ver="comercial admin"><span class="chapeu">Comercial</span><span class="quem">Equipe BC</span></div>
+  <button type="button" class="grupo" data-ver="comercial admin"><span class="chapeu">Comercial</span><span class="quem">Equipe BC</span><span class="seta" aria-hidden="true"></span></button>
   <button class="item" data-vai="com-esteira"><i class="pt"></i>Esteira<span class="cont">28</span></button>
   <button class="item" data-vai="com-clientes"><i class="pt"></i>Clientes<span class="cont">63</span></button>
   <button class="item" data-vai="com-ficha"><i class="pt"></i>Ficha do cliente</button>
   <button class="item" data-vai="com-propostas"><i class="pt"></i>Propostas<span class="cont">4</span></button>
   <button class="item" data-vai="com-contratos"><i class="pt"></i>Contratos<span class="cont">18</span></button>
 
-  <div class="grupo" data-ver="juridico admin"><span class="chapeu">Jurídico</span><span class="quem">Escritório</span></div>
+  <button type="button" class="grupo" data-ver="juridico admin"><span class="chapeu">Jurídico</span><span class="quem">Escritório</span><span class="seta" aria-hidden="true"></span></button>
   <button class="item mod-i" data-vai="jur-processos"><i class="pt"></i>Processos<span class="mod">Completo</span></button>
   <button class="item mod-i" data-vai="jur-prazos"><i class="pt"></i>Prazos<span class="mod">Completo</span></button>
 
-  <div class="grupo" data-ver="financeiro admin"><span class="chapeu">Financeiro</span><span class="quem">BC</span></div>
+  <button type="button" class="grupo" data-ver="financeiro admin"><span class="chapeu">Financeiro</span><span class="quem">BC</span><span class="seta" aria-hidden="true"></span></button>
   <button class="item" data-vai="fin-honorarios"><i class="pt"></i>Honorários</button>
   <button class="item" data-vai="fin-comissoes"><i class="pt"></i>Comissões a pagar</button>
   <button class="item" data-vai="fin-fechamento"><i class="pt"></i>Fechamento</button>
   <button class="item" data-vai="fin-estornos"><i class="pt"></i>Estornos<span class="cont">2</span></button>
 
-  <div class="grupo" data-ver="admin"><span class="chapeu">Gestão</span><span class="quem">Administração</span></div>
+  <button type="button" class="grupo" data-ver="admin"><span class="chapeu">Gestão</span><span class="quem">Administração</span><span class="seta" aria-hidden="true"></span></button>
   <button class="item" data-vai="ges-geral"><i class="pt"></i>Visão geral</button>
   <button class="item" data-vai="ges-regras"><i class="pt"></i>Regras de comissão</button>
   <button class="item" data-vai="ges-produtos"><i class="pt"></i>Produtos e teses</button>
@@ -431,7 +444,7 @@ body[data-nivel="nucleo"] .item.mod-i{opacity:.28}
   <button class="item" data-vai="ges-auditoria"><i class="pt"></i>Auditoria</button>
   <button class="item" data-vai="ges-config"><i class="pt"></i>Configurações</button>
 
-  <div class="grupo so-mobile"><span class="chapeu">Sessão</span></div>
+  <button type="button" class="grupo so-mobile"><span class="chapeu">Sessão</span><span class="seta" aria-hidden="true"></span></button>
   <button class="item so-mobile" id="sair-m"><i class="pt"></i>Trocar perfil</button>
   <button class="item so-mobile" data-ir="site"><i class="pt"></i>Voltar ao site</button>
 </nav>
@@ -1418,6 +1431,43 @@ body[data-nivel="nucleo"] .item.mod-i{opacity:.28}
     gaveta(false); sair();
   });
 
+  /* ── Grupos que recolhem (só no celular) ──────────────────────────
+     No computador o trilho é alto e cabe tudo aberto. No celular, o
+     administrador tem 24 itens: sem recolher vira uma rolagem única. */
+  var noCelular = window.matchMedia("(max-width:820px)");
+
+  function itensDo(grupo){
+    var lista = [], no = grupo.nextElementSibling;
+    while (no && no.classList.contains("item")){ lista.push(no); no = no.nextElementSibling; }
+    return lista;
+  }
+  function recolher(grupo, fechar){
+    grupo.classList.toggle("fechado", fechar);
+    grupo.setAttribute("aria-expanded", String(!fechar));
+    itensDo(grupo).forEach(function(i){ i.classList.toggle("oculto-grupo", fechar); });
+  }
+  /* Deixa aberto só o grupo que contém a tela aberta. O grupo "Sessão"
+     (trocar perfil / voltar ao site) fica de fora: é saída, tem que
+     estar sempre à mão. */
+  function arrumarGrupos(){
+    var todos = document.querySelectorAll(".grupo[data-ver]");
+    if (!noCelular.matches){
+      todos.forEach(function(g){ recolher(g, false); });
+      return;
+    }
+    var atual = document.querySelector('.item[aria-current="true"]');
+    todos.forEach(function(g){
+      recolher(g, !(atual && itensDo(g).indexOf(atual) !== -1));
+    });
+  }
+  document.querySelectorAll(".grupo[data-ver]").forEach(function(g){
+    g.addEventListener("click", function(){
+      if (!noCelular.matches) return;
+      recolher(g, !g.classList.contains("fechado"));
+    });
+  });
+  noCelular.addEventListener("change", arrumarGrupos);
+
   function grupos(){ return document.querySelectorAll(".grupo[data-ver]"); }
 
   /* Mostra só os grupos do perfil e devolve o primeiro item visível. */
@@ -1513,6 +1563,7 @@ body[data-nivel="nucleo"] .item.mod-i{opacity:.28}
     itens.forEach(function(b){ b.setAttribute("aria-current", String(b === bt)); });
     tGrupo.textContent = grupoDe(bt);
     tTela.textContent  = nomeDe(bt);
+    arrumarGrupos();                     /* deixa aberto só o grupo da tela */
     gaveta(false);                       /* escolheu a tela, fecha a gaveta */
     window.scrollTo({ top: 0, behavior: "instant" });
   }
