@@ -16,9 +16,16 @@ body{
 }
 #site{font-size:15px;line-height:1.6}
 #plataforma{font-size:13.5px;line-height:1.55}
-/* cinto e suspensório: a troca usa el.hidden, e isto garante o efeito
-   mesmo que o reset do host não venha. */
-#site[hidden],#plataforma[hidden]{display:none!important}
+
+/* ⚠️ NÃO REMOVER.
+   Toda a navegação — trocar site/plataforma, entrar, montar o menu por
+   perfil — esconde elemento com `el.hidden`. Mas o `[hidden]` do navegador
+   é regra de UA, e QUALQUER `display` do nosso CSS ganha dela: como
+   `.entrada` é `display:grid` e `.casca` é `display:flex`, marcar hidden
+   não surtia efeito nenhum e a tela de entrada ficava colada por cima.
+   Dentro do visualizador de artifact isso passou despercebido porque o
+   host injeta esta mesma regra; em página servida sozinha, não existe. */
+[hidden]{display:none!important}
 
 
 /* ══════════════════ PÁGINA PÚBLICA ══════════════════ */
