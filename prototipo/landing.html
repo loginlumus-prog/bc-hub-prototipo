@@ -32,6 +32,10 @@ h1,h2,h3,h4{margin:0;font-weight:400;text-wrap:balance}
 p{margin:0}
 a{color:inherit;text-decoration:none}
 img{max-width:100%;display:block}
+/* Sem isto o <button> vem com o fundo cinza-claro padrão do navegador, e
+   os botões secundários (texto marfim, sem fundo próprio) somem. Só os
+   .forte escapavam, porque pintam o fundo de ouro. */
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 :focus-visible{outline:2px solid var(--ouro);outline-offset:3px}
 
 .gut{padding-left:var(--gut);padding-right:var(--gut)}
