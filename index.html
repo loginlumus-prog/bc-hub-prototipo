@@ -237,7 +237,9 @@ body{
 #site .hero{min-height:min(660px,92svh)}
 #site .hero-img{background-position:70% center}
 /* o texto passa a ficar sobre o meio da foto, então o véu vira vertical */
-#site .hero-veu{background:linear-gradient(0deg,rgba(10,9,8,.95) 0%,rgba(10,9,8,.66) 46%,rgba(10,9,8,.3) 100%)}
+#site /* No celular o texto sobe até ~55% da altura, #site onde a foto tem as luzes
+     da cidade. O chapéu dourado precisa de véu forte já nessa faixa. */
+  .hero-veu{background:linear-gradient(0deg,rgba(10,9,8,.96) 0%,rgba(10,9,8,.88) 40%,rgba(10,9,8,.66) 64%,rgba(10,9,8,.32) 100%)}
 #site .hero-txt{padding-top:112px;padding-bottom:42px}
 #site .hero-acao{gap:10px}
 #site .hero-acao .bt{flex:1 1 auto;justify-content:center}
