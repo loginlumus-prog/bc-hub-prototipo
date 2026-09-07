@@ -249,12 +249,59 @@ body[data-nivel="nucleo"] .item.mod-i{opacity:.28}
 .marcar .cx{width:14px;height:14px;flex:0 0 14px;border:1px solid var(--fio-forte);margin-top:2px;display:grid;place-items:center;font-size:9px}
 .marcar .cx.on{background:var(--ouro);border-color:var(--ouro);color:#0F0C08}
 
+/* ═════ CELULAR ═════
+   O trilho tem 28 itens em 7 grupos. Empilhado no topo, empurra o
+   conteúdo para fora da tela — então no celular ele vira gaveta. */
+.menu-bt{display:none}
+.veu-menu{display:none}
+.so-mobile{display:none}
+
 @media (max-width:820px){
-  .casca{flex-direction:column}
-  .trilho{width:100%;flex:none;height:auto;position:static;border-right:0;border-bottom:1px solid var(--fio);max-height:none}
-  .grupo{padding:12px 16px 4px}
-  .conteudo{padding:20px 16px 50px}
+  .menu-bt{display:grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border:1px solid var(--fio-forte);color:var(--marfim)}
+  .veu-menu{display:block;position:fixed;inset:0;z-index:55;background:rgba(6,5,4,.72);backdrop-filter:blur(2px)}
+  .veu-menu[hidden]{display:none!important}
+  .so-mobile{display:flex}
+
+  .casca{display:block}
+  .trilho{
+    position:fixed;top:0;left:0;bottom:0;z-index:60;
+    width:min(276px,84vw);height:100dvh;max-height:100dvh;overflow-y:auto;
+    transform:translateX(-102%);transition:transform .3s cubic-bezier(.16,1,.3,1);
+    border-right:1px solid var(--fio);box-shadow:14px 0 40px rgba(0,0,0,.5);
+  }
+  .trilho.aberto{transform:none}
+  .item{padding:11px 18px}          /* alvo de toque maior */
+  .conteudo{padding:20px 15px 56px}
+
+  .barra{padding:0 14px;gap:9px;height:50px}
+  .trilha{display:none}             /* o título já aparece na cabeça da tela */
+  .eu span:not(.bola){display:none} /* só a inicial */
+  #sair,.barra [data-ir="site"]{display:none}  /* foram para a gaveta */
+
   .duas,.duas-eq{grid-template-columns:1fr}
+  .tab{min-width:620px}             /* rola dentro do .rolar em vez de espremer */
+  .cabeca{gap:14px}
+}
+
+@media (max-width:640px){
+  .linha-d{grid-template-columns:1fr;gap:2px}
+  .log-l{grid-template-columns:1fr;gap:1px;padding:10px 0}
+  /* árvore da rede: nome + valor em cima, nível + % embaixo */
+  .galho{grid-template-columns:1fr auto;gap:5px 10px}
+  .galho-q{grid-column:1;grid-row:1;min-width:0}
+  .galho-v{grid-column:2;grid-row:1}
+  .galho-t{grid-column:1;grid-row:2;justify-self:start}
+  .galho-p{grid-column:2;grid-row:2;text-align:right}
+  /* contas da tela de entrada: e-mail desce para a segunda linha */
+  .conta{grid-template-columns:31px 1fr;gap:10px}
+  .conta-e{grid-column:2;text-align:left;white-space:normal;word-break:break-all}
+  .chave button{padding:4px 8px;font-size:9px}
+  .regua-val{font-size:22px}
+}
+
+@media (max-width:900px){
+  .entrada{grid-template-columns:1fr}
+  .entrada-esq{border-right:0;border-bottom:1px solid var(--fio)}
 }
 </style>
 
@@ -383,11 +430,21 @@ body[data-nivel="nucleo"] .item.mod-i{opacity:.28}
   <button class="item" data-vai="ges-ia"><i class="pt"></i>Atendimento e IA</button>
   <button class="item" data-vai="ges-auditoria"><i class="pt"></i>Auditoria</button>
   <button class="item" data-vai="ges-config"><i class="pt"></i>Configurações</button>
+
+  <div class="grupo so-mobile"><span class="chapeu">Sessão</span></div>
+  <button class="item so-mobile" id="sair-m"><i class="pt"></i>Trocar perfil</button>
+  <button class="item so-mobile" data-ir="site"><i class="pt"></i>Voltar ao site</button>
 </nav>
+<div class="veu-menu" id="veu-menu" hidden></div>
 
 <!-- ═════════════ PALCO ═════════════ -->
 <div class="palco">
   <div class="barra">
+    <button class="menu-bt" id="menu-bt" aria-label="Abrir menu" aria-expanded="false">
+      <svg width="15" height="11" viewBox="0 0 15 11" aria-hidden="true">
+        <path d="M0 .5h15M0 5.5h15M0 10.5h15" stroke="currentColor" stroke-width="1.2"/>
+      </svg>
+    </button>
     <div class="trilha"><span id="t-grupo">Indicador</span><span>/</span><b id="t-tela">Meu painel</b></div>
     <div class="barra-dir">
       <span class="chapeu" style="display:none">Versão</span>
@@ -1340,6 +1397,27 @@ body[data-nivel="nucleo"] .item.mod-i{opacity:.28}
     publico:    { nome:"Visitante",             bola:"·", email:"",                                inicio:"pub-cadastro" }
   };
 
+  /* Gaveta do celular. No computador o trilho é fixo e nada disto atua. */
+  var trilho  = document.querySelector(".trilho");
+  var menuBt  = document.getElementById("menu-bt");
+  var veuMenu = document.getElementById("veu-menu");
+
+  function gaveta(abrir){
+    trilho.classList.toggle("aberto", abrir);
+    veuMenu.hidden = !abrir;
+    menuBt.setAttribute("aria-expanded", String(abrir));
+  }
+  menuBt.addEventListener("click", function(){
+    gaveta(!trilho.classList.contains("aberto"));
+  });
+  veuMenu.addEventListener("click", function(){ gaveta(false); });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape") gaveta(false);
+  });
+  document.getElementById("sair-m").addEventListener("click", function(){
+    gaveta(false); sair();
+  });
+
   function grupos(){ return document.querySelectorAll(".grupo[data-ver]"); }
 
   /* Mostra só os grupos do perfil e devolve o primeiro item visível. */
@@ -1435,6 +1513,7 @@ body[data-nivel="nucleo"] .item.mod-i{opacity:.28}
     itens.forEach(function(b){ b.setAttribute("aria-current", String(b === bt)); });
     tGrupo.textContent = grupoDe(bt);
     tTela.textContent  = nomeDe(bt);
+    gaveta(false);                       /* escolheu a tela, fecha a gaveta */
     window.scrollTo({ top: 0, behavior: "instant" });
   }
   itens.forEach(function(b){ b.addEventListener("click", function(){ mostrar(b); }); });
