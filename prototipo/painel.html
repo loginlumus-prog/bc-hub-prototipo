@@ -1,0 +1,1456 @@
+<title>Plataforma BC</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200;0,300;0,400;1,6..72,300&family=Manrope:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+:root{
+  --breu:#0A0908; --carvao:#121010; --carvao-alto:#1A1715;
+  --ouro:#C79A4B; --ouro-luz:#E5C083;
+  --marfim:#F2ECE2; --fumo:#9B9186; --fumo-fraco:#6D655B;
+  --fio:rgba(242,236,226,.11); --fio-forte:rgba(242,236,226,.23);
+  --ok:#7A9E6B; --ok-bg:rgba(122,158,107,.13);
+  --atencao:#C4873A; --atencao-bg:rgba(196,135,58,.13);
+  --perigo:#B4564A; --perigo-bg:rgba(180,86,74,.13);
+  --info:#7E8AA8; --info-bg:rgba(126,138,168,.13);
+  --serif:"Newsreader",Georgia,serif;
+  --sans:"Manrope",-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Courier New",monospace;
+  --trilho:236px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--breu);color:var(--marfim);font-family:var(--sans);font-size:13.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;font-weight:400;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit}
+table{border-collapse:collapse;width:100%}
+:focus-visible{outline:2px solid var(--ouro);outline-offset:2px}
+
+.chapeu{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--fumo-fraco);font-weight:500}
+.titulo{font-family:var(--serif);font-size:clamp(21px,2.3vw,29px);font-weight:300;line-height:1.14;letter-spacing:-.012em}
+.sub{color:var(--fumo);font-size:12.5px}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--mono);font-size:11.5px;letter-spacing:-.02em}
+.mudo{color:var(--fumo-fraco)}
+
+/* ═════ TRILHO ═════ */
+.casca{display:flex;min-height:100vh}
+.trilho{width:var(--trilho);flex:0 0 var(--trilho);border-right:1px solid var(--fio);position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--breu);padding-bottom:14px;scrollbar-width:thin;scrollbar-color:var(--fio-forte) transparent}
+.marca{display:flex;align-items:center;gap:10px;padding:19px 18px 17px;border-bottom:1px solid var(--fio);position:sticky;top:0;background:var(--breu);z-index:2}
+.escudo{width:24px;height:27px;flex:0 0 24px;color:var(--ouro)}
+.marca-nome{font-family:var(--serif);font-size:15.5px;display:block;line-height:1.15}
+.marca-sub{font-size:8px;letter-spacing:.19em;text-transform:uppercase;color:var(--fumo-fraco)}
+
+.grupo{padding:16px 18px 6px;display:flex;align-items:center;gap:7px}
+.grupo .quem{margin-left:auto;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--fumo-fraco);border:1px solid var(--fio);padding:1px 5px}
+.item{display:flex;align-items:center;gap:9px;width:100%;padding:6.5px 18px;text-align:left;color:var(--fumo);font-size:12.5px;border-left:2px solid transparent;transition:color .16s}
+.item:hover{color:var(--marfim)}
+.item[aria-current="true"]{color:var(--marfim);border-left-color:var(--ouro);background:rgba(242,236,226,.03)}
+.item .pt{width:3px;height:3px;flex:0 0 3px;background:currentColor;opacity:.5}
+.item[aria-current="true"] .pt{background:var(--ouro);opacity:1}
+.item .cont{margin-left:auto;font-size:10.5px;color:var(--fumo-fraco);font-variant-numeric:tabular-nums}
+.item .mod{margin-left:auto;font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ouro);border:1px solid rgba(199,154,75,.4);padding:1px 4px}
+.item.fora{opacity:.28}
+
+/* ═════ TOPO ═════ */
+.palco{flex:1;min-width:0;display:flex;flex-direction:column}
+.barra{display:flex;align-items:center;gap:16px;padding:0 26px;height:52px;border-bottom:1px solid var(--fio);position:sticky;top:0;background:rgba(10,9,8,.94);backdrop-filter:blur(12px);z-index:20}
+.trilha{font-size:11.5px;color:var(--fumo-fraco);display:flex;gap:7px;align-items:center}
+.trilha b{color:var(--marfim);font-weight:400}
+.barra-dir{margin-left:auto;display:flex;align-items:center;gap:14px}
+.chave{display:flex;border:1px solid var(--fio)}
+.chave button{padding:4px 11px;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--fumo);transition:.16s}
+.chave button[aria-pressed="true"]{background:var(--ouro);color:#0F0C08;font-weight:600}
+.eu{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--fumo)}
+.eu .bola{width:23px;height:23px;border:1px solid var(--fio-forte);display:grid;place-items:center;font-family:var(--serif);font-size:11px;color:var(--ouro-luz)}
+
+.conteudo{padding:26px 26px 70px;max-width:1300px}
+.tela{display:none}
+.tela[data-ativa="true"]{display:block;animation:entra .26s ease-out}
+@keyframes entra{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tela[data-ativa="true"]{animation:none}}
+
+.cabeca{display:flex;justify-content:space-between;align-items:flex-end;gap:22px;padding-bottom:16px;border-bottom:1px solid var(--fio);margin-bottom:24px;flex-wrap:wrap}
+.cabeca-txt{display:flex;flex-direction:column;gap:6px}
+.acoes{display:flex;gap:9px;flex-wrap:wrap}
+.secao{margin-top:34px}
+.secao-cab{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding-bottom:8px;border-bottom:1px solid var(--fio);margin-bottom:14px}
+.secao-tit{font-family:var(--serif);font-size:18px;font-weight:400}
+
+.bt{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:11.5px;letter-spacing:.04em;border:1px solid var(--fio-forte);color:var(--marfim);transition:.18s}
+.bt:hover{border-color:var(--marfim)}
+.bt.forte{background:var(--ouro);border-color:var(--ouro);color:#0F0C08;font-weight:600}
+.bt.forte:hover{background:var(--ouro-luz);border-color:var(--ouro-luz)}
+.bt.mini{padding:4px 9px;font-size:10.5px}
+
+/* réguas */
+.reguas{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:1px;background:var(--fio);border:1px solid var(--fio)}
+.regua{background:var(--breu);padding:14px 15px;display:flex;flex-direction:column;gap:4px}
+.regua-rot{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fumo-fraco)}
+.regua-val{font-family:var(--serif);font-size:25px;font-weight:300;line-height:1;font-variant-numeric:tabular-nums}
+.regua-val.d{color:var(--ouro-luz)}
+.regua-pe{font-size:10.5px;color:var(--fumo)}
+
+/* tabela */
+.rolar{overflow-x:auto}
+.tab{font-size:12.5px}
+.tab thead th{text-align:left;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fumo-fraco);font-weight:500;padding:0 11px 7px 0;border-bottom:1px solid var(--fio);white-space:nowrap}
+.tab tbody td{padding:10px 11px 10px 0;border-bottom:1px solid var(--fio);vertical-align:top}
+.tab tbody tr:hover td{background:rgba(242,236,226,.02)}
+.tab .dir{text-align:right;padding-right:0;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* selos */
+.selo{display:inline-flex;align-items:center;gap:5px;font-size:10px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;white-space:nowrap}
+.selo::before{content:"";width:4px;height:4px;background:currentColor}
+.selo.ok{color:var(--ok);background:var(--ok-bg)}
+.selo.at{color:var(--atencao);background:var(--atencao-bg)}
+.selo.pe{color:var(--perigo);background:var(--perigo-bg)}
+.selo.in{color:var(--info);background:var(--info-bg)}
+.selo.ne{color:var(--fumo);background:rgba(242,236,226,.05)}
+
+/* listas de dados */
+.dados{display:flex;flex-direction:column;border-top:1px solid var(--fio)}
+.linha-d{display:grid;grid-template-columns:150px 1fr;gap:14px;padding:8.5px 0;border-bottom:1px solid var(--fio)}
+.linha-d dt{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fumo-fraco);padding-top:2px}
+.linha-d dd{margin:0}
+.duas{display:grid;grid-template-columns:1fr 300px;gap:34px;align-items:start}
+.duas-eq{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+@media (max-width:1020px){.duas,.duas-eq{grid-template-columns:1fr}}
+
+/* documentos / checklist */
+.docs{display:flex;flex-direction:column;border-top:1px solid var(--fio)}
+.doc{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--fio);font-size:12px}
+.doc-m{width:14px;height:14px;flex:0 0 14px;border:1px solid var(--fio-forte);display:grid;place-items:center;font-size:8px}
+.doc-m.feito{background:var(--ok);border-color:var(--ok);color:#0D110B}
+.doc-n{flex:1}
+.doc-x{font-size:10px;color:var(--fumo-fraco);font-family:var(--mono)}
+
+/* árvore */
+.arvore{display:flex;flex-direction:column}
+.galho{display:grid;grid-template-columns:1fr auto auto auto;gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid var(--fio)}
+.galho-q{display:flex;align-items:center;gap:10px;min-width:0}
+.tracos{color:var(--fumo-fraco);font-family:var(--mono);font-size:11px;white-space:pre}
+.galho-n{font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.galho-c{font-family:var(--mono);font-size:10.5px;color:var(--fumo-fraco)}
+.galho-t{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--fumo-fraco);border:1px solid var(--fio);padding:1px 6px}
+.galho-v{font-variant-numeric:tabular-nums;font-size:12.5px;min-width:88px;text-align:right}
+.galho-p{font-size:11px;color:var(--fumo);min-width:30px;text-align:right;font-variant-numeric:tabular-nums}
+
+/* kanban */
+.esteira{display:grid;grid-template-columns:repeat(5,minmax(172px,1fr));gap:1px;background:var(--fio);border:1px solid var(--fio);overflow-x:auto}
+.coluna{background:var(--breu);min-width:172px;display:flex;flex-direction:column}
+.col-cab{padding:10px 12px;border-bottom:1px solid var(--fio);display:flex;justify-content:space-between;gap:7px}
+.col-nome{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fumo)}
+.col-qtd{font-size:10.5px;color:var(--fumo-fraco);font-variant-numeric:tabular-nums}
+.col-corpo{padding:8px;display:flex;flex-direction:column;gap:8px;flex:1}
+.cartao{border:1px solid var(--fio);padding:9px 10px;display:flex;flex-direction:column;gap:5px;cursor:pointer;transition:border-color .16s}
+.cartao:hover{border-color:var(--fio-forte)}
+.cartao-n{font-size:12px;line-height:1.3}
+.cartao-v{font-family:var(--serif);font-size:15px;font-variant-numeric:tabular-nums}
+.cartao-p{display:flex;justify-content:space-between;align-items:center;gap:7px;font-size:10px;color:var(--fumo-fraco)}
+
+/* fases */
+.fases{display:flex;flex-direction:column;border-left:1px solid var(--fio);margin-left:4px}
+.fase{position:relative;padding:0 0 19px 24px}
+.fase::before{content:"";position:absolute;left:-4px;top:5px;width:7px;height:7px;background:var(--breu);border:1px solid var(--fumo-fraco)}
+.fase.feita::before{background:var(--ouro);border-color:var(--ouro)}
+.fase.agora::before{border-color:var(--ouro);box-shadow:0 0 0 3px rgba(199,154,75,.16)}
+.fase-c{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.fase-n{font-size:12.5px}
+.fase-d{font-family:var(--mono);font-size:10.5px;color:var(--fumo-fraco)}
+.fase-t{font-size:12px;color:var(--fumo);margin-top:2px;max-width:62ch;line-height:1.6}
+.fase.futura .fase-n,.fase.futura .fase-t{color:var(--fumo-fraco)}
+
+/* cálculo */
+.calculo{border:1px solid var(--fio);padding:16px 18px;display:flex;flex-direction:column;gap:9px}
+.calc-l{display:flex;justify-content:space-between;gap:14px;font-size:12.5px;font-variant-numeric:tabular-nums}
+.calc-l.total{border-top:1px solid var(--fio);padding-top:10px;margin-top:2px}
+.calc-l.total b{font-family:var(--serif);font-weight:300;font-size:20px;color:var(--ouro-luz)}
+
+/* formulários */
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px 22px}
+.campo{display:flex;flex-direction:column;gap:4px}
+.campo label{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fumo-fraco)}
+.campo input,.campo select,.campo textarea{background:transparent;border:0;border-bottom:1px solid var(--fio-forte);padding:6px 0;color:var(--marfim);font:inherit;font-size:13px}
+.campo input:focus,.campo select:focus,.campo textarea:focus{outline:0;border-bottom-color:var(--ouro)}
+.campo select option{background:var(--carvao)}
+.campo .dica{font-size:10.5px;color:var(--fumo-fraco)}
+.largo{grid-column:1/-1}
+
+/* interruptor */
+.opcao{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--fio)}
+.chavinha{width:30px;height:17px;flex:0 0 30px;border:1px solid var(--fio-forte);position:relative;margin-top:2px}
+.chavinha::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;background:var(--fumo-fraco);transition:.2s}
+.chavinha.on{border-color:var(--ouro);background:rgba(199,154,75,.18)}
+.chavinha.on::after{left:15px;background:var(--ouro)}
+.opcao-t{font-size:12.5px}
+.opcao-d{font-size:11.5px;color:var(--fumo-fraco);line-height:1.55;margin-top:2px}
+
+/* cartões de módulo */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:1px;background:var(--fio);border:1px solid var(--fio)}
+.card{background:var(--breu);padding:16px;display:flex;flex-direction:column;gap:7px;min-height:124px}
+.card h4{font-family:var(--serif);font-size:16px;font-weight:400}
+.card p{font-size:11.5px;color:var(--fumo);line-height:1.6}
+
+/* log */
+.log{display:flex;flex-direction:column;border-top:1px solid var(--fio);font-family:var(--mono);font-size:11.5px}
+.log-l{display:grid;grid-template-columns:128px 118px 1fr;gap:14px;padding:8px 0;border-bottom:1px solid var(--fio);color:var(--fumo)}
+.log-l b{color:var(--marfim);font-weight:400}
+.log-l .quando{color:var(--fumo-fraco)}
+
+/* conversa IA */
+.chat{border:1px solid var(--fio);display:flex;flex-direction:column;max-width:430px}
+.chat-t{padding:10px 14px;border-bottom:1px solid var(--fio);display:flex;justify-content:space-between;align-items:center}
+.chat-c{padding:14px;display:flex;flex-direction:column;gap:11px}
+.balao{padding:9px 12px;font-size:12.5px;line-height:1.55;max-width:88%}
+.balao.dela{background:var(--carvao-alto);border-left:2px solid var(--ouro);align-self:flex-start}
+.balao.dele{background:rgba(242,236,226,.05);align-self:flex-end;text-align:right}
+.balao-q{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fumo-fraco);display:block;margin-bottom:3px}
+
+.nota{font-size:11.5px;color:var(--fumo-fraco);line-height:1.65;max-width:78ch;margin-top:12px}
+.aviso{display:flex;align-items:center;gap:8px;padding:8px 12px;margin-bottom:18px;border:1px solid rgba(199,154,75,.28);background:rgba(199,154,75,.05);font-size:11px;color:var(--fumo)}
+.aviso b{color:var(--ouro-luz);font-weight:500}
+
+/* módulo fora do núcleo */
+body[data-nivel="nucleo"] .mod-c{opacity:.2;filter:grayscale(1);pointer-events:none}
+body[data-nivel="nucleo"] .item.mod-i{opacity:.28}
+
+/* ═════ ENTRADA ═════ */
+.entrada{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr}
+@media (max-width:900px){.entrada{grid-template-columns:1fr}}
+.entrada-esq{padding:clamp(26px,5vw,62px);display:flex;flex-direction:column;justify-content:center;gap:22px;border-right:1px solid var(--fio)}
+.entrada-dir{padding:clamp(26px,5vw,62px);display:flex;flex-direction:column;justify-content:center;gap:16px;background:var(--carvao)}
+.entrada-h{font-family:var(--serif);font-size:clamp(25px,3.3vw,39px);font-weight:200;line-height:1.12;letter-spacing:-.02em}
+.entrada-h em{font-style:italic;color:var(--ouro-luz)}
+.contas{display:flex;flex-direction:column;border-top:1px solid var(--fio)}
+.conta{display:grid;grid-template-columns:31px 1fr auto;gap:13px;align-items:center;padding:12px 0;border-bottom:1px solid var(--fio);text-align:left;width:100%;transition:padding .18s,color .18s}
+.conta:hover{padding-left:7px}
+.conta .bola{width:31px;height:31px;border:1px solid var(--fio-forte);display:grid;place-items:center;font-family:var(--serif);font-size:13px;color:var(--ouro-luz)}
+.conta-n{font-size:13px}
+.conta-p{font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--fumo-fraco);margin-top:1px}
+.conta-e{font-family:var(--mono);font-size:10.5px;color:var(--fumo-fraco);text-align:right;white-space:nowrap}
+
+/* ═════ CADASTRO (wizard) ═════ */
+.wiz{max-width:540px;border:1px solid var(--fio);background:var(--carvao)}
+.wiz-passos{display:flex;border-bottom:1px solid var(--fio)}
+.wiz-p{flex:1;padding:10px 4px;text-align:center;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fumo-fraco);border-right:1px solid var(--fio);position:relative}
+.wiz-p:last-child{border-right:0}
+.wiz-p[data-em="true"]{color:var(--marfim)}
+.wiz-p[data-em="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--ouro)}
+.wiz-p b{display:block;font-family:var(--serif);font-size:15px;font-weight:400;letter-spacing:0}
+.wiz-c{padding:19px}
+.wiz-e{display:none}
+.wiz-e[data-em="true"]{display:block}
+.contrato{max-height:186px;overflow-y:auto;border:1px solid var(--fio);padding:14px;font-size:11.5px;line-height:1.75;color:var(--fumo);scrollbar-width:thin;scrollbar-color:var(--fio-forte) transparent}
+.contrato h5{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ouro-luz);margin:0 0 7px;font-weight:500}
+.contrato p{margin-bottom:9px}
+.pronto{display:flex;flex-direction:column;align-items:center;gap:13px;text-align:center;padding:14px 0}
+.pronto-cod{font-family:var(--mono);font-size:15px;color:var(--ouro-luz);border:1px solid rgba(199,154,75,.4);padding:7px 15px}
+.marcar{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:var(--fumo);line-height:1.55;cursor:pointer}
+.marcar .cx{width:14px;height:14px;flex:0 0 14px;border:1px solid var(--fio-forte);margin-top:2px;display:grid;place-items:center;font-size:9px}
+.marcar .cx.on{background:var(--ouro);border-color:var(--ouro);color:#0F0C08}
+
+@media (max-width:820px){
+  .casca{flex-direction:column}
+  .trilho{width:100%;flex:none;height:auto;position:static;border-right:0;border-bottom:1px solid var(--fio);max-height:none}
+  .grupo{padding:12px 16px 4px}
+  .conteudo{padding:20px 16px 50px}
+  .duas,.duas-eq{grid-template-columns:1fr}
+}
+</style>
+
+<!-- ═════════════ ENTRADA ═════════════ -->
+<div class="entrada" id="entrada">
+  <div class="entrada-esq">
+    <div class="marca" style="border:0;padding:0;position:static">
+      <svg class="escudo" viewBox="0 0 44 48" aria-hidden="true">
+        <path d="M22 3 L40 9.6 V25.2 C40 35.4 32.2 41.9 22 45 C11.8 41.9 4 35.4 4 25.2 V9.6 Z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+        <path d="M15 17.5 L22 15 L29 17.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/>
+        <text x="22" y="31.5" text-anchor="middle" fill="currentColor" font-family="Newsreader, Georgia, serif" font-size="13.5">BC</text>
+      </svg>
+      <span><span class="marca-nome">BC Hub</span><span class="marca-sub">Plataforma</span></span>
+    </div>
+    <h1 class="entrada-h">Cada pessoa entra<br>e vê <em>só a parte dela.</em></h1>
+    <p class="sub" style="max-width:44ch;line-height:1.7">
+      O indicador não vê a carteira da BC. O advogado parceiro não vê comissão. O cliente
+      vê o próprio caso e mais nada. Escolha um perfil abaixo para entrar como ele.
+    </p>
+    <div class="form" style="max-width:340px">
+      <div class="campo"><label>E-mail</label><input id="e-mail" value="ricardo@bchub.com.br"></div>
+      <div class="campo"><label>Senha</label><input id="e-senha" type="password" value="bc2026"></div>
+    </div>
+    <div class="acoes">
+      <button class="bt forte" id="e-entrar">Entrar</button>
+      <button class="bt" data-abrir-cadastro>Criar meu cadastro</button>
+      <button class="bt" data-ir="site">&larr; Voltar ao site</button>
+    </div>
+    <p class="nota" style="margin-top:0">
+      Protótipo: a senha de todos os perfis é <span class="mono" style="color:var(--ouro-luz)">bc2026</span>.
+      Clicar em um perfil ao lado já entra direto.
+    </p>
+  </div>
+
+  <div class="entrada-dir">
+    <span class="chapeu">Perfis de demonstração</span>
+    <div class="contas">
+      <button class="conta" data-perfil="indicador">
+        <span class="bola">R</span>
+        <span><span class="conta-n">Ricardo Menezes</span><span class="conta-p">Indicador</span></span>
+        <span class="conta-e">ricardo@bchub.com.br</span>
+      </button>
+      <button class="conta" data-perfil="comercial">
+        <span class="bola">C</span>
+        <span><span class="conta-n">Camila Torres</span><span class="conta-p">Comercial · equipe BC</span></span>
+        <span class="conta-e">camila@bchub.com.br</span>
+      </button>
+      <button class="conta" data-perfil="juridico">
+        <span class="bola">L</span>
+        <span><span class="conta-n">Dra. Larissa Fontes</span><span class="conta-p">Jurídico · escritório parceiro</span></span>
+        <span class="conta-e">larissa@carvalhofontes.adv.br</span>
+      </button>
+      <button class="conta" data-perfil="financeiro">
+        <span class="bola">P</span>
+        <span><span class="conta-n">Paula Rocha</span><span class="conta-p">Financeiro</span></span>
+        <span class="conta-e">financeiro@bchub.com.br</span>
+      </button>
+      <button class="conta" data-perfil="admin">
+        <span class="bola">B</span>
+        <span><span class="conta-n">Bruno Carvalho</span><span class="conta-p">Administração · sócio</span></span>
+        <span class="conta-e">admin@bchub.com.br</span>
+      </button>
+      <button class="conta" data-perfil="cliente">
+        <span class="bola">V</span>
+        <span><span class="conta-n">Transportes Vale Norte</span><span class="conta-p">Cliente</span></span>
+        <span class="conta-e">contato@valenorte.com.br</span>
+      </button>
+    </div>
+    <p class="nota">
+      São seis perfis com telas diferentes — não é o mesmo painel escondendo botão. O menu
+      da esquerda muda inteiro conforme quem entrou.
+    </p>
+  </div>
+</div>
+
+<div class="casca" id="app" hidden>
+<!-- ═════════════ TRILHO ═════════════ -->
+<nav class="trilho">
+  <div class="marca">
+    <svg class="escudo" viewBox="0 0 44 48" aria-hidden="true">
+      <path d="M22 3 L40 9.6 V25.2 C40 35.4 32.2 41.9 22 45 C11.8 41.9 4 35.4 4 25.2 V9.6 Z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M15 17.5 L22 15 L29 17.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/>
+      <text x="22" y="31.5" text-anchor="middle" fill="currentColor" font-family="Newsreader, Georgia, serif" font-size="13.5">BC</text>
+    </svg>
+    <span><span class="marca-nome">BC Hub</span><span class="marca-sub">Plataforma</span></span>
+  </div>
+
+  <div class="grupo" data-ver="cliente"><span class="chapeu">Meu caso</span><span class="quem">Cliente</span></div>
+  <button class="item" data-vai="cli-caso"><i class="pt"></i>Acompanhar</button>
+  <button class="item" data-vai="cli-docs"><i class="pt"></i>Meus documentos<span class="cont">5/6</span></button>
+  <button class="item" data-vai="cli-contrato"><i class="pt"></i>Meu contrato</button>
+
+  <div class="grupo" data-ver="publico"><span class="chapeu">Cadastro</span><span class="quem">Público</span></div>
+  <button class="item" data-vai="pub-cadastro"><i class="pt"></i>Criar cadastro</button>
+
+  <div class="grupo" data-ver="indicador admin"><span class="chapeu">Indicador</span><span class="quem">41 pessoas</span></div>
+  <button class="item" data-vai="ind-painel" aria-current="true"><i class="pt"></i>Meu painel</button>
+  <button class="item" data-vai="ind-rede"><i class="pt"></i>Minha rede<span class="cont">14</span></button>
+  <button class="item" data-vai="ind-indicados"><i class="pt"></i>Meus indicados<span class="cont">11</span></button>
+  <button class="item" data-vai="ind-extrato"><i class="pt"></i>Meu extrato</button>
+  <button class="item" data-vai="ind-material"><i class="pt"></i>Material de divulgação</button>
+  <button class="item" data-vai="ind-dados"><i class="pt"></i>Meus dados</button>
+
+  <div class="grupo" data-ver="comercial admin"><span class="chapeu">Comercial</span><span class="quem">Equipe BC</span></div>
+  <button class="item" data-vai="com-esteira"><i class="pt"></i>Esteira<span class="cont">28</span></button>
+  <button class="item" data-vai="com-clientes"><i class="pt"></i>Clientes<span class="cont">63</span></button>
+  <button class="item" data-vai="com-ficha"><i class="pt"></i>Ficha do cliente</button>
+  <button class="item" data-vai="com-propostas"><i class="pt"></i>Propostas<span class="cont">4</span></button>
+  <button class="item" data-vai="com-contratos"><i class="pt"></i>Contratos<span class="cont">18</span></button>
+
+  <div class="grupo" data-ver="juridico admin"><span class="chapeu">Jurídico</span><span class="quem">Escritório</span></div>
+  <button class="item mod-i" data-vai="jur-processos"><i class="pt"></i>Processos<span class="mod">Completo</span></button>
+  <button class="item mod-i" data-vai="jur-prazos"><i class="pt"></i>Prazos<span class="mod">Completo</span></button>
+
+  <div class="grupo" data-ver="financeiro admin"><span class="chapeu">Financeiro</span><span class="quem">BC</span></div>
+  <button class="item" data-vai="fin-honorarios"><i class="pt"></i>Honorários</button>
+  <button class="item" data-vai="fin-comissoes"><i class="pt"></i>Comissões a pagar</button>
+  <button class="item" data-vai="fin-fechamento"><i class="pt"></i>Fechamento</button>
+  <button class="item" data-vai="fin-estornos"><i class="pt"></i>Estornos<span class="cont">2</span></button>
+
+  <div class="grupo" data-ver="admin"><span class="chapeu">Gestão</span><span class="quem">Administração</span></div>
+  <button class="item" data-vai="ges-geral"><i class="pt"></i>Visão geral</button>
+  <button class="item" data-vai="ges-regras"><i class="pt"></i>Regras de comissão</button>
+  <button class="item" data-vai="ges-produtos"><i class="pt"></i>Produtos e teses</button>
+  <button class="item" data-vai="ges-equipe"><i class="pt"></i>Equipe e acessos</button>
+  <button class="item" data-vai="ges-ia"><i class="pt"></i>Atendimento e IA</button>
+  <button class="item" data-vai="ges-auditoria"><i class="pt"></i>Auditoria</button>
+  <button class="item" data-vai="ges-config"><i class="pt"></i>Configurações</button>
+</nav>
+
+<!-- ═════════════ PALCO ═════════════ -->
+<div class="palco">
+  <div class="barra">
+    <div class="trilha"><span id="t-grupo">Indicador</span><span>/</span><b id="t-tela">Meu painel</b></div>
+    <div class="barra-dir">
+      <span class="chapeu" style="display:none">Versão</span>
+      <div class="chave">
+        <button data-nivel="completo" aria-pressed="true">Completo</button>
+        <button data-nivel="nucleo" aria-pressed="false">Núcleo</button>
+      </div>
+      <span class="eu"><span class="bola" id="eu-bola">R</span><span id="eu-nome">Ricardo Menezes</span></span>
+      <button class="bt mini" id="sair">Trocar perfil</button>
+      <button class="bt mini" data-ir="site">Voltar ao site</button>
+    </div>
+  </div>
+
+  <div class="conteudo">
+
+  <!-- ══ CADASTRO (público) ══ -->
+  <section class="tela" data-tela="pub-cadastro">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Convite de Ricardo Menezes · RM-8GAC</span><h2 class="titulo">Cadastro de indicador</h2></div>
+    </div>
+    <div class="wiz">
+      <div class="wiz-passos">
+        <div class="wiz-p" data-passo="1" data-em="true"><b>1</b>Dados</div>
+        <div class="wiz-p" data-passo="2"><b>2</b>Contrato</div>
+        <div class="wiz-p" data-passo="3"><b>3</b>Senha</div>
+        <div class="wiz-p" data-passo="4"><b>4</b>Pronto</div>
+      </div>
+      <div class="wiz-c">
+
+        <div class="wiz-e" data-etapa="1" data-em="true">
+          <p class="sub" style="margin-bottom:16px">Leva menos de dois minutos. Estes dados entram no contrato de parceria.</p>
+          <div class="form">
+            <div class="campo largo"><label>Nome completo</label><input id="cad-nome" value="Ana Beatriz Camargo"></div>
+            <div class="campo"><label>CPF</label><input value="472.108.335-11"></div>
+            <div class="campo"><label>WhatsApp</label><input value="(71) 99184-2207"></div>
+            <div class="campo largo"><label>E-mail</label><input value="ana.camargo@email.com.br"></div>
+            <div class="campo"><label>Profissão</label><input value="Corretora de seguros"></div>
+            <div class="campo"><label>Cidade</label><input value="Salvador / BA"></div>
+          </div>
+          <button class="bt forte" data-passo-ir="2" style="width:100%;justify-content:center;margin-top:18px">Continuar para o contrato</button>
+        </div>
+
+        <div class="wiz-e" data-etapa="2">
+          <p class="sub" style="margin-bottom:14px">Leia até o fim para liberar o aceite.</p>
+          <div class="contrato">
+            <h5>Contrato de parceria de indicação · v2</h5>
+            <p><b>1. Objeto.</b> A BC Consultoria &amp; Assessoria Ltda. contrata o parceiro para indicar
+            pessoas físicas e jurídicas interessadas nos serviços de consultoria prestados pela BC.</p>
+            <p><b>2. Natureza.</b> A indicação é atividade comercial autônoma. O parceiro não integra
+            o quadro da BC, não representa a empresa perante terceiros e não presta serviço jurídico
+            nem contábil, sendo vedado prometer resultado, prazo ou valor de crédito.</p>
+            <p><b>3. Remuneração.</b> A comissão incide exclusivamente sobre o honorário recebido pela BC
+            no contrato de consultoria, e nunca sobre o valor devido ao cliente. Os percentuais vigentes
+            são de 8% na indicação direta, 3% no segundo nível e 1% no terceiro.</p>
+            <p><b>4. Fato gerador.</b> A comissão é apurada na confirmação do êxito e paga no dia 5 do mês
+            seguinte ao fechamento da competência, mediante chave Pix validada em nome do parceiro.</p>
+            <p><b>5. Estorno.</b> Caso encerrado sem êxito, rescindido ou com crédito reduzido após reanálise
+            gera estorno proporcional a todos os níveis que houverem recebido, na competência seguinte,
+            com motivo registrado.</p>
+            <p><b>6. Vigência da regra.</b> Os percentuais vigentes na data de assinatura de cada contrato de
+            consultoria permanecem aplicáveis àquele caso até o encerramento, ainda que a regra mude depois.</p>
+            <p><b>7. Sigilo.</b> O parceiro obriga-se a manter sigilo sobre dados de clientes a que tiver acesso,
+            nos termos da Lei nº 13.709/2018.</p>
+            <p><b>8. Rescisão.</b> Qualquer das partes pode encerrar esta parceria a qualquer tempo, preservado
+            o direito às comissões de casos já contratados.</p>
+          </div>
+          <label class="marcar" style="margin-top:14px" id="cad-aceite"><span class="cx"></span>
+            <span>Li e aceito o contrato de parceria. Entendo que a comissão depende do êxito do caso e pode ser estornada.</span>
+          </label>
+          <div class="acoes" style="margin-top:16px">
+            <button class="bt" data-passo-ir="1">Voltar</button>
+            <button class="bt forte" data-passo-ir="3">Assinar e continuar</button>
+          </div>
+        </div>
+
+        <div class="wiz-e" data-etapa="3">
+          <p class="sub" style="margin-bottom:16px">Crie a senha de acesso ao seu painel.</p>
+          <div class="form">
+            <div class="campo largo"><label>Senha</label><input type="password" value="••••••••"></div>
+            <div class="campo largo"><label>Repetir senha</label><input type="password" value="••••••••"></div>
+            <div class="campo largo"><label>Chave Pix para receber</label><input value="472.108.335-11"><span class="dica">Precisa estar no seu CPF — comissão não é paga para conta de terceiro</span></div>
+          </div>
+          <div class="acoes" style="margin-top:18px">
+            <button class="bt" data-passo-ir="2">Voltar</button>
+            <button class="bt forte" data-passo-ir="4">Concluir cadastro</button>
+          </div>
+        </div>
+
+        <div class="wiz-e" data-etapa="4">
+          <div class="pronto">
+            <span class="chapeu">Cadastro concluído</span>
+            <p style="font-family:var(--serif);font-size:22px;font-weight:300">Seu link já está no ar</p>
+            <span class="pronto-cod">bchub.com.br/i/AC-4471</span>
+            <p class="sub" style="max-width:38ch">
+              O contrato assinado foi para o seu e-mail. O registro da assinatura não pode ser
+              alterado nem apagado — nem pela BC.
+            </p>
+            <button class="bt forte" data-entrar="indicador">Entrar no meu painel</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <p class="nota">O contrato é assinado no cadastro, antes da primeira indicação. É o que separa uma rede organizada de um grupo de WhatsApp com promessa de comissão.</p>
+  </section>
+
+  <!-- ══ CLIENTE · ACOMPANHAR ══ -->
+  <section class="tela" data-tela="cli-caso">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Meu caso · BC Consultoria</span><h2 class="titulo">Recuperação de PIS/COFINS</h2><span class="mono mudo">Transportes Vale Norte Ltda · 14.208.771/0001-63</span></div>
+      <div class="acoes"><span class="selo at">Em andamento</span><button class="bt">Falar com a BC</button></div>
+    </div>
+    <div class="reguas">
+      <div class="regua"><span class="regua-rot">Crédito apurado</span><span class="regua-val d num">R$ 487.320</span><span class="regua-pe">principal + Selic</span></div>
+      <div class="regua"><span class="regua-rot">Honorário · 20%</span><span class="regua-val num">R$ 97.464</span><span class="regua-pe">só se houver êxito</span></div>
+      <div class="regua"><span class="regua-rot">Fica com você</span><span class="regua-val num">R$ 389.856</span><span class="regua-pe">líquido estimado</span></div>
+      <div class="regua"><span class="regua-rot">Etapa</span><span class="regua-val num" style="font-size:19px">Aguardando sentença</span><span class="regua-pe">desde 24/10</span></div>
+    </div>
+    <div class="secao duas">
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Onde seu caso está</h3></div>
+        <div class="fases">
+          <div class="fase feita"><div class="fase-c"><span class="fase-n">Documentos recebidos</span><span class="fase-d">21/08/2026</span></div><p class="fase-t">Cinco dos seis documentos entregues. Falta a certidão negativa.</p></div>
+          <div class="fase feita"><div class="fase-c"><span class="fase-n">Cálculo concluído</span><span class="fase-d">29/08/2026</span></div><p class="fase-t">Apuração de 01/2021 a 12/2025, corrigida pela Selic.</p></div>
+          <div class="fase feita"><div class="fase-c"><span class="fase-n">Contrato assinado</span><span class="fase-d">18/08/2026</span></div></div>
+          <div class="fase feita"><div class="fase-c"><span class="fase-n">Ação protocolada</span><span class="fase-d">02/09/2026</span></div><p class="fase-t">3ª Vara Federal de Salvador, conduzida por Carvalho &amp; Fontes Advogados.</p></div>
+          <div class="fase agora"><div class="fase-c"><span class="fase-n">Aguardando sentença</span><span class="fase-d">desde 24/10/2026</span></div><p class="fase-t">Previsão do escritório: primeiro trimestre de 2027. Não há nada pendente com você nesta etapa.</p></div>
+          <div class="fase futura"><div class="fase-c"><span class="fase-n">Compensação do crédito</span><span class="fase-d">—</span></div><p class="fase-t">É quando o crédito passa a ser usado nos seus tributos. O honorário só é devido a partir daqui.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Quem cuida</h3></div>
+        <div class="dados">
+          <div class="linha-d"><dt>Responsável</dt><dd>Camila Torres <span class="sub">· BC Consultoria</span></dd></div>
+          <div class="linha-d"><dt>Advogada</dt><dd>Dra. Larissa Fontes</dd></div>
+          <div class="linha-d"><dt>WhatsApp</dt><dd class="mono">(71) 3500-0000</dd></div>
+        </div>
+        <p class="nota">O cliente vê etapa, prazo e valores do próprio caso — e nada da operação interna: não vê quem indicou, não vê comissão, não vê outros clientes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CLIENTE · DOCUMENTOS ══ -->
+  <section class="tela" data-tela="cli-docs">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Meu caso · documentos</span><h2 class="titulo">Falta 1 documento</h2></div>
+      <div class="acoes"><button class="bt forte">Enviar pelo celular</button></div>
+    </div>
+    <div class="duas">
+      <div>
+        <div class="docs">
+          <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Contrato social</span><span class="doc-x">18/08</span></div>
+          <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Cartão CNPJ</span><span class="doc-x">18/08</span></div>
+          <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Procuração assinada</span><span class="doc-x">19/08</span></div>
+          <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">EFD-Contribuições 2021–2025</span><span class="doc-x">21/08</span></div>
+          <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Balancetes 2021–2025</span><span class="doc-x">21/08</span></div>
+          <div class="doc" style="border-color:rgba(196,135,58,.4)"><span class="doc-m"></span><span class="doc-n">Certidão negativa de débitos</span><button class="bt mini">Enviar</button></div>
+        </div>
+        <p class="nota">A lista muda conforme a tese do caso. Fotografar pelo celular já resolve — não precisa escanear nem mandar por e-mail.</p>
+      </div>
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Por que este</h3></div>
+        <p class="sub" style="line-height:1.75">
+          A certidão negativa comprova que a empresa está regular perante a Receita. Sem ela,
+          o crédito reconhecido não pode ser habilitado para compensação — o caso ganha e o
+          dinheiro fica parado.
+        </p>
+        <p class="nota">Explicar <b>por que</b> cada documento é necessário derruba o principal motivo de caso parado: o cliente não entendeu para que serve e deixou para depois.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CLIENTE · CONTRATO ══ -->
+  <section class="tela" data-tela="cli-contrato">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Meu caso · contrato</span><h2 class="titulo">Consultoria tributária</h2></div>
+      <div class="acoes"><button class="bt">Baixar PDF</button></div>
+    </div>
+    <div class="duas">
+      <div>
+        <dl class="dados">
+          <div class="linha-d"><dt>Contratada</dt><dd>BC Consultoria &amp; Assessoria Ltda</dd></div>
+          <div class="linha-d"><dt>Modelo</dt><dd>Honorário de êxito v3</dd></div>
+          <div class="linha-d"><dt>Honorário</dt><dd>20% sobre o crédito efetivamente compensado</dd></div>
+          <div class="linha-d"><dt>Assinado em</dt><dd>18/08/2026 às 14h07</dd></div>
+          <div class="linha-d"><dt>Signatário</dt><dd>Elias Moura Santana · CPF 402.113.885-70</dd></div>
+          <div class="linha-d"><dt>Registro</dt><dd class="mono">a4f0…9d2c</dd></div>
+        </dl>
+        <div class="secao">
+          <div class="secao-cab"><h3 class="secao-tit">O que você paga</h3></div>
+          <div class="calculo">
+            <div class="calc-l"><span class="mudo">Antes do êxito</span><span>R$ 0,00</span></div>
+            <div class="calc-l"><span class="mudo">Honorário quando compensar</span><span>R$ 97.464,00</span></div>
+            <div class="calc-l total"><span class="mudo">Seu líquido</span><b>R$ 389.856,00</b></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Assinatura</h3></div>
+        <p class="sub" style="line-height:1.75">
+          O documento foi assinado eletronicamente com registro de data, hora, CPF e uma
+          impressão do conteúdo. Alterar qualquer trecho depois muda essa impressão — e a
+          diferença fica visível para as duas partes.
+        </p>
+        <p class="nota">Nem a BC consegue apagar ou editar este registro.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ MEU PAINEL ══ -->
+  <section class="tela" data-tela="ind-painel" data-ativa="true">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Indicador · RM-8GAC · desde 03/2026</span><h2 class="titulo">Setembro de 2026</h2></div>
+      <div class="acoes"><button class="bt">Copiar meu link</button><button class="bt forte">Indicar agora</button></div>
+    </div>
+    <div class="reguas">
+      <div class="regua"><span class="regua-rot">A receber</span><span class="regua-val d num">R$ 18.940</span><span class="regua-pe">libera dia 05/10</span></div>
+      <div class="regua"><span class="regua-rot">Pago no mês</span><span class="regua-val num">R$ 7.210</span><span class="regua-pe">crédito em 05/09</span></div>
+      <div class="regua"><span class="regua-rot">Casos abertos</span><span class="regua-val num">11</span><span class="regua-pe">6 esperando documento</span></div>
+      <div class="regua"><span class="regua-rot">Minha rede</span><span class="regua-val num">14</span><span class="regua-pe">3 níveis</span></div>
+      <div class="regua"><span class="regua-rot">Conversão</span><span class="regua-val num">38%</span><span class="regua-pe">indicação → contrato</span></div>
+    </div>
+
+    <div class="secao duas">
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Precisa de você</h3><span class="sub">4 pendências</span></div>
+        <div class="rolar"><table class="tab">
+          <thead><tr><th>Caso</th><th>O que falta</th><th class="dir">Parado há</th><th class="dir"></th></tr></thead>
+          <tbody>
+            <tr><td>Distribuidora Camaçari</td><td>5 documentos do kit</td><td class="dir"><span class="selo pe">12 dias</span></td><td class="dir"><button class="bt mini">Cobrar</button></td></tr>
+            <tr><td>Comercial São Braz ME</td><td>2 documentos do kit</td><td class="dir"><span class="selo at">4 dias</span></td><td class="dir"><button class="bt mini">Cobrar</button></td></tr>
+            <tr><td>Supermercado Pituba</td><td>Resposta da proposta</td><td class="dir"><span class="selo at">5 dias</span></td><td class="dir"><button class="bt mini">Ligar</button></td></tr>
+            <tr><td>Você</td><td>Confirmar dados bancários</td><td class="dir"><span class="selo ne">—</span></td><td class="dir"><button class="bt mini">Abrir</button></td></tr>
+          </tbody>
+        </table></div>
+        <p class="nota">Esta é a primeira tabela da tela de propósito: quem indica só volta ao sistema se ele disser o que fazer hoje. Saldo bonito sem tarefa não traz ninguém de volta.</p>
+      </div>
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Próximo pagamento</h3></div>
+        <div class="calculo">
+          <div class="calc-l"><span class="mudo">Comissão apurada</span><span>R$ 19.064,00</span></div>
+          <div class="calc-l"><span class="mudo">Estorno (Padaria Sete Portas)</span><span style="color:var(--perigo)">— R$ 124,00</span></div>
+          <div class="calc-l total"><span class="mudo">A receber em 05/10</span><b>R$ 18.940,00</b></div>
+        </div>
+        <div class="secao">
+          <div class="secao-cab"><h3 class="secao-tit">Avisos</h3></div>
+          <div class="docs">
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Êxito confirmado · Metalúrgica Ipiranga</span><span class="doc-x">hoje</span></div>
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Ana Camargo fechou o 6º caso</span><span class="doc-x">ontem</span></div>
+            <div class="doc"><span class="doc-m"></span><span class="doc-n">Regra de nível 2 muda em 01/10</span><span class="doc-x">3 dias</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ MINHA REDE ══ -->
+  <section class="tela" data-tela="ind-rede">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Rede · Ricardo Menezes</span><h2 class="titulo">14 pessoas em três níveis</h2></div>
+      <div class="acoes"><button class="bt">Exportar</button><button class="bt forte">Convidar</button></div>
+    </div>
+    <div class="reguas" style="margin-bottom:28px">
+      <div class="regua"><span class="regua-rot">Nível 1 · 8%</span><span class="regua-val num">4</span><span class="regua-pe">diretos</span></div>
+      <div class="regua"><span class="regua-rot">Nível 2 · 3%</span><span class="regua-val num">7</span><span class="regua-pe">indicados dos seus</span></div>
+      <div class="regua"><span class="regua-rot">Nível 3 · 1%</span><span class="regua-val num">3</span><span class="regua-pe">terceiro nível</span></div>
+      <div class="regua"><span class="regua-rot">Gerado pela rede</span><span class="regua-val d num">R$ 12.722</span><span class="regua-pe">acumulado 2026</span></div>
+      <div class="regua"><span class="regua-rot">Ativos no mês</span><span class="regua-val num">9</span><span class="regua-pe">de 14</span></div>
+    </div>
+    <div class="arvore">
+      <div class="galho"><div class="galho-q"><span class="tracos">└─</span><span class="galho-n">Ana Beatriz Camargo</span><span class="galho-c">AC-4471</span><span class="selo ok">Ativa</span></div><span class="galho-t">Nível 1</span><span class="galho-p num">8%</span><span class="galho-v">R$ 6.318</span></div>
+      <div class="galho"><div class="galho-q"><span class="tracos">  └─</span><span class="galho-n">Sueli Barreto</span><span class="galho-c">SB-9033</span><span class="selo ok">Ativa</span></div><span class="galho-t">Nível 2</span><span class="galho-p num">3%</span><span class="galho-v">R$ 1.146</span></div>
+      <div class="galho"><div class="galho-q"><span class="tracos">    └─</span><span class="galho-n">Paulo Rangel</span><span class="galho-c">PR-2210</span></div><span class="galho-t">Nível 3</span><span class="galho-p num">1%</span><span class="galho-v">R$ 382</span></div>
+      <div class="galho"><div class="galho-q"><span class="tracos">  └─</span><span class="galho-n">Marcos Dias</span><span class="galho-c">MD-7712</span><span class="selo ok">Ativo</span></div><span class="galho-t">Nível 2</span><span class="galho-p num">3%</span><span class="galho-v">R$ 894</span></div>
+      <div class="galho"><div class="galho-q"><span class="tracos">    └─</span><span class="galho-n">Ivete Correia</span><span class="galho-c">IC-3390</span><span class="selo ne">Sem caso</span></div><span class="galho-t">Nível 3</span><span class="galho-p num">1%</span><span class="galho-v">—</span></div>
+      <div class="galho"><div class="galho-q"><span class="tracos">└─</span><span class="galho-n">Juliana Prado</span><span class="galho-c">JP-5540</span><span class="selo ok">Ativa</span></div><span class="galho-t">Nível 1</span><span class="galho-p num">8%</span><span class="galho-v">R$ 3.104</span></div>
+      <div class="galho"><div class="galho-q"><span class="tracos">  └─</span><span class="galho-n">Everton Sales</span><span class="galho-c">ES-8891</span></div><span class="galho-t">Nível 2</span><span class="galho-p num">3%</span><span class="galho-v">R$ 618</span></div>
+      <div class="galho"><div class="galho-q"><span class="tracos">└─</span><span class="galho-n">Fábio Queiroz</span><span class="galho-c">FQ-1102</span></div><span class="galho-t">Nível 1</span><span class="galho-p num">8%</span><span class="galho-v">R$ 260</span></div>
+      <div class="galho"><div class="galho-q"><span class="tracos">└─</span><span class="galho-n">Cleber Andrade</span><span class="galho-c">CA-6620</span><span class="selo ne">Sem caso</span></div><span class="galho-t">Nível 1</span><span class="galho-p num">8%</span><span class="galho-v">—</span></div>
+    </div>
+    <p class="nota">O percentual por nível é configurável e vale a partir da data em que muda — contrato antigo continua na regra antiga. É o ponto que mais gera briga numa rede, então fica gravado com data e responsável em <b>Auditoria</b>.</p>
+  </section>
+
+  <!-- ══ MEUS INDICADOS ══ -->
+  <section class="tela" data-tela="ind-indicados">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Indicador · meus casos</span><h2 class="titulo">11 casos em andamento</h2></div>
+      <div class="acoes"><button class="bt">Filtrar</button><button class="bt forte">Nova indicação</button></div>
+    </div>
+    <div class="rolar"><table class="tab">
+      <thead><tr><th>Cliente</th><th>Frente</th><th>Etapa</th><th class="dir">Crédito</th><th class="dir">Minha comissão</th><th class="dir">Entrou</th></tr></thead>
+      <tbody>
+        <tr><td>Transportes Vale Norte<div class="sub">ICMS na base PIS/COFINS</div></td><td>Consultoria</td><td><span class="selo ok">Fechado</span></td><td class="dir">R$ 487.320</td><td class="dir">R$ 7.797</td><td class="dir">02/07</td></tr>
+        <tr><td>Metalúrgica Ipiranga<div class="sub">INSS verbas indenizatórias</div></td><td>Consultoria</td><td><span class="selo ok">Fechado</span></td><td class="dir">R$ 142.900</td><td class="dir">R$ 11.432</td><td class="dir">14/07</td></tr>
+        <tr><td>Supermercado Pituba<div class="sub">PIS/COFINS</div></td><td>Consultoria</td><td><span class="selo at">Proposta</span></td><td class="dir">R$ 88.150</td><td class="dir">prevista</td><td class="dir">21/08</td></tr>
+        <tr><td>Hotel Barra Mar<div class="sub">PIS/COFINS</div></td><td>Consultoria</td><td><span class="selo in">Análise</span></td><td class="dir">R$ 61.480</td><td class="dir">prevista</td><td class="dir">25/08</td></tr>
+        <tr><td>Distribuidora Camaçari</td><td>Consultoria</td><td><span class="selo pe">Documentos</span></td><td class="dir">—</td><td class="dir">—</td><td class="dir">26/08</td></tr>
+        <tr><td>R. Cerqueira<div class="sub">negativação Serasa</div></td><td>BC Cred</td><td><span class="selo in">Análise</span></td><td class="dir">R$ 9.400</td><td class="dir">prevista</td><td class="dir">04/09</td></tr>
+        <tr><td>Frigorífico Boa Vista</td><td>Consultoria</td><td><span class="selo ne">Indicado</span></td><td class="dir">—</td><td class="dir">—</td><td class="dir">hoje</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- ══ MEU EXTRATO ══ -->
+  <section class="tela" data-tela="ind-extrato">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Indicador · extrato</span><h2 class="titulo">Comissões</h2></div>
+      <div class="acoes"><button class="bt">2026</button><button class="bt">Baixar PDF</button></div>
+    </div>
+    <div class="rolar"><table class="tab">
+      <thead><tr><th>Competência</th><th>Caso</th><th>Origem</th><th>Nível</th><th class="dir">Base</th><th class="dir">%</th><th class="dir">Valor</th><th class="dir">Situação</th></tr></thead>
+      <tbody>
+        <tr><td>09/2026</td><td>Metalúrgica Ipiranga</td><td>Direta</td><td>1</td><td class="dir">R$ 142.900</td><td class="dir">8%</td><td class="dir">R$ 11.432</td><td class="dir"><span class="selo at">A liberar</span></td></tr>
+        <tr><td>09/2026</td><td>Transportes Vale Norte</td><td>Direta</td><td>1</td><td class="dir">R$ 97.464</td><td class="dir">8%</td><td class="dir">R$ 7.797</td><td class="dir"><span class="selo at">A liberar</span></td></tr>
+        <tr><td>09/2026</td><td>Padaria Sete Portas</td><td>Marcos Dias</td><td>3</td><td class="dir">R$ 12.400</td><td class="dir">1%</td><td class="dir" style="color:var(--perigo)">— R$ 124</td><td class="dir"><span class="selo pe">Estorno</span></td></tr>
+        <tr><td>08/2026</td><td>Comercial São Braz</td><td>Ana Camargo</td><td>2</td><td class="dir">R$ 38.200</td><td class="dir">3%</td><td class="dir">R$ 1.146</td><td class="dir"><span class="selo ok">Pago 05/09</span></td></tr>
+        <tr><td>08/2026</td><td>J. Nascimento</td><td>Ana Camargo</td><td>2</td><td class="dir">R$ 4.800</td><td class="dir">3%</td><td class="dir">R$ 144</td><td class="dir"><span class="selo ok">Pago 05/09</span></td></tr>
+        <tr><td>08/2026</td><td>Auto Center Pernambués</td><td>Direta</td><td>1</td><td class="dir">R$ 74.000</td><td class="dir">8%</td><td class="dir">R$ 5.920</td><td class="dir"><span class="selo ok">Pago 05/09</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="nota">Base, percentual e origem em toda linha. Um indicador que não consegue reconstruir sozinho como chegou no valor liga para a BC — e depois desconfia. Esta tabela existe para essa ligação não acontecer.</p>
+  </section>
+
+  <!-- ══ MATERIAL ══ -->
+  <section class="tela" data-tela="ind-material">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Indicador · divulgação</span><h2 class="titulo">Material para você usar</h2></div>
+    </div>
+    <div class="duas-eq">
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Seu link</h3></div>
+        <div class="dados">
+          <div class="linha-d"><dt>Convite geral</dt><dd class="mono">bchub.com.br/i/RM-8GAC</dd></div>
+          <div class="linha-d"><dt>Empresa (CNPJ)</dt><dd class="mono">bchub.com.br/i/RM-8GAC?f=pj</dd></div>
+          <div class="linha-d"><dt>BC Cred (CPF)</dt><dd class="mono">bchub.com.br/i/RM-8GAC?f=pf</dd></div>
+          <div class="linha-d"><dt>Aberturas</dt><dd class="num">312 · 41 cadastros · 13%</dd></div>
+        </div>
+        <div class="secao">
+          <div class="secao-cab"><h3 class="secao-tit">Textos prontos</h3></div>
+          <div class="docs">
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Primeira mensagem — empresário</span><span class="doc-x">copiar</span></div>
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Primeira mensagem — contador</span><span class="doc-x">copiar</span></div>
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Resposta a “isso é golpe?”</span><span class="doc-x">copiar</span></div>
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Follow-up de 7 dias</span><span class="doc-x">copiar</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Artes</h3></div>
+        <div class="cards">
+          <div class="card"><span class="chapeu">Story</span><h4>1080×1920</h4><p>Peça com seu nome e seu código já aplicados.</p><button class="bt mini" style="align-self:flex-start">Baixar</button></div>
+          <div class="card"><span class="chapeu">Feed</span><h4>1080×1350</h4><p>Carrossel de 5 telas explicando a recuperação.</p><button class="bt mini" style="align-self:flex-start">Baixar</button></div>
+          <div class="card"><span class="chapeu">WhatsApp</span><h4>Cartão</h4><p>Imagem de apresentação para conversa nova.</p><button class="bt mini" style="align-self:flex-start">Baixar</button></div>
+          <div class="card"><span class="chapeu">Impresso</span><h4>Cartão de visita</h4><p>PDF com QR do seu link, pronto para gráfica.</p><button class="bt mini" style="align-self:flex-start">Baixar</button></div>
+        </div>
+        <p class="nota">Toda peça sai com o código do indicador embutido. Ninguém precisa lembrar de mandar o link certo — é o erro que mais custa comissão em rede de indicação.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ MEUS DADOS ══ -->
+  <section class="tela" data-tela="ind-dados">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Indicador · cadastro</span><h2 class="titulo">Meus dados</h2></div>
+      <div class="acoes"><button class="bt forte">Salvar</button></div>
+    </div>
+    <div class="duas">
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Pessoais</h3></div>
+        <div class="form">
+          <div class="campo"><label>Nome completo</label><input value="Ricardo Menezes de Souza"></div>
+          <div class="campo"><label>CPF</label><input value="318.774.905-22"></div>
+          <div class="campo"><label>WhatsApp</label><input value="(71) 99612-4408"></div>
+          <div class="campo"><label>E-mail</label><input value="ricardo@contabilmenezes.com.br"></div>
+          <div class="campo"><label>Profissão</label><input value="Contador · CRC-BA 028114"></div>
+          <div class="campo"><label>Cidade</label><input value="Salvador / BA"></div>
+        </div>
+        <div class="secao">
+          <div class="secao-cab"><h3 class="secao-tit">Recebimento</h3><span class="sub">para onde vai a comissão</span></div>
+          <div class="form">
+            <div class="campo"><label>Chave Pix</label><input value="318.774.905-22"><span class="dica">CPF · confere com o titular</span></div>
+            <div class="campo"><label>Tipo</label><select><option>CPF</option><option>E-mail</option><option>Telefone</option><option>Aleatória</option></select></div>
+            <div class="campo"><label>Banco</label><input value="341 · Itaú Unibanco"></div>
+            <div class="campo"><label>Nota fiscal</label><select><option>Não emito (pessoa física)</option><option>Emito como MEI</option><option>Emito como PJ</option></select></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Contrato</h3></div>
+        <div class="dados">
+          <div class="linha-d"><dt>Assinado</dt><dd>12/03/2026 · 10h41</dd></div>
+          <div class="linha-d"><dt>Versão</dt><dd>Parceria v2 · 8/3/1%</dd></div>
+          <div class="linha-d"><dt>Registro</dt><dd class="mono">a4f0…9d2c</dd></div>
+        </div>
+        <p class="nota">O registro da assinatura não pode ser alterado nem apagado — nem pela BC. É ele que dá valor de prova ao contrato se algum dia a comissão for discutida.</p>
+        <button class="bt" style="margin-top:12px">Baixar meu contrato</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ESTEIRA ══ -->
+  <section class="tela" data-tela="com-esteira">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Comercial · esteira</span><h2 class="titulo">28 casos em andamento</h2></div>
+      <div class="acoes"><button class="bt">Só os parados</button><button class="bt">Filtrar</button><button class="bt forte">Novo caso</button></div>
+    </div>
+    <div class="esteira">
+      <div class="coluna"><div class="col-cab"><span class="col-nome">Indicado</span><span class="col-qtd num">6</span></div><div class="col-corpo">
+        <div class="cartao"><span class="cartao-n">Frigorífico Boa Vista Ltda</span><span class="cartao-v">—</span><div class="cartao-p"><span>Ana C.</span><span>hoje</span></div></div>
+        <div class="cartao"><span class="cartao-n">Auto Peças Iguatemi ME</span><span class="cartao-v">—</span><div class="cartao-p"><span>Marcos D.</span><span>ontem</span></div></div>
+        <div class="cartao"><span class="cartao-n">R. Cerqueira</span><span class="cartao-v">—</span><div class="cartao-p"><span>BC Cred</span><span>2 dias</span></div></div>
+      </div></div>
+      <div class="coluna"><div class="col-cab"><span class="col-nome">Documentos</span><span class="col-qtd num">7</span></div><div class="col-corpo">
+        <div class="cartao"><span class="cartao-n">Comercial São Braz ME</span><span class="cartao-v">—</span><div class="cartao-p"><span>4 de 6</span><span class="selo at">4 dias</span></div></div>
+        <div class="cartao"><span class="cartao-n">Distribuidora Camaçari</span><span class="cartao-v">—</span><div class="cartao-p"><span>1 de 6</span><span class="selo pe">12 dias</span></div></div>
+        <div class="cartao"><span class="cartao-n">Padaria Dois Irmãos</span><span class="cartao-v">—</span><div class="cartao-p"><span>5 de 6</span><span>2 dias</span></div></div>
+      </div></div>
+      <div class="coluna"><div class="col-cab"><span class="col-nome">Análise</span><span class="col-qtd num">5</span></div><div class="col-corpo">
+        <div class="cartao"><span class="cartao-n">Metalúrgica Ipiranga S/A</span><span class="cartao-v">R$ 142.900</span><div class="cartao-p"><span>INSS verbas</span><span class="selo ok">Apurado</span></div></div>
+        <div class="cartao"><span class="cartao-n">Hotel Barra Mar Ltda</span><span class="cartao-v">R$ 61.480</span><div class="cartao-p"><span>PIS/COFINS</span><span>conferindo</span></div></div>
+      </div></div>
+      <div class="coluna"><div class="col-cab"><span class="col-nome">Proposta</span><span class="col-qtd num">4</span></div><div class="col-corpo">
+        <div class="cartao"><span class="cartao-n">Supermercado Pituba</span><span class="cartao-v">R$ 88.150</span><div class="cartao-p"><span>enviada 02/09</span><span class="selo at">5 dias</span></div></div>
+        <div class="cartao"><span class="cartao-n">Construtora Ondina</span><span class="cartao-v">R$ 213.700</span><div class="cartao-p"><span>enviada 05/09</span><span>2 dias</span></div></div>
+      </div></div>
+      <div class="coluna"><div class="col-cab"><span class="col-nome">Fechado</span><span class="col-qtd num">6</span></div><div class="col-corpo">
+        <div class="cartao"><span class="cartao-n">Transportes Vale Norte</span><span class="cartao-v">R$ 487.320</span><div class="cartao-p"><span>18/08</span><span class="selo ok">Ativo</span></div></div>
+        <div class="cartao"><span class="cartao-n">J. Nascimento</span><span class="cartao-v">R$ 4.800</span><div class="cartao-p"><span>BC Cred</span><span class="selo ok">Baixado</span></div></div>
+      </div></div>
+    </div>
+    <p class="nota">A coluna Documentos mostra <b>há quantos dias o caso está parado</b>, não só quantos faltam — é onde a operação morre. Passando de 7 dias, o indicador que trouxe o caso recebe aviso junto com o cliente.</p>
+  </section>
+
+  <!-- ══ CLIENTES ══ -->
+  <section class="tela" data-tela="com-clientes">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Comercial · carteira</span><h2 class="titulo">63 clientes</h2></div>
+      <div class="acoes"><button class="bt">CNPJ</button><button class="bt">CPF</button><button class="bt forte">Cadastrar</button></div>
+    </div>
+    <div class="rolar"><table class="tab">
+      <thead><tr><th>Cliente</th><th>Documento</th><th>Frente</th><th>Tese</th><th>Indicado por</th><th class="dir">Crédito</th><th class="dir">Situação</th></tr></thead>
+      <tbody>
+        <tr><td>Transportes Vale Norte Ltda</td><td class="mono">14.208.771/0001-63</td><td>Consultoria</td><td>ICMS base PIS/COFINS</td><td>R. Menezes</td><td class="dir">R$ 487.320</td><td class="dir"><span class="selo ok">Contrato ativo</span></td></tr>
+        <tr><td>Metalúrgica Ipiranga S/A</td><td class="mono">09.774.310/0001-08</td><td>Consultoria</td><td>INSS verbas</td><td>R. Menezes</td><td class="dir">R$ 142.900</td><td class="dir"><span class="selo ok">Contrato ativo</span></td></tr>
+        <tr><td>Construtora Ondina Ltda</td><td class="mono">21.663.902/0001-45</td><td>Consultoria</td><td>PIS/COFINS</td><td>J. Prado</td><td class="dir">R$ 213.700</td><td class="dir"><span class="selo at">Proposta</span></td></tr>
+        <tr><td>Supermercado Pituba ME</td><td class="mono">33.109.554/0001-71</td><td>Consultoria</td><td>PIS/COFINS</td><td>R. Menezes</td><td class="dir">R$ 88.150</td><td class="dir"><span class="selo at">Proposta</span></td></tr>
+        <tr><td>Hotel Barra Mar Ltda</td><td class="mono">17.885.200/0001-19</td><td>Consultoria</td><td>PIS/COFINS</td><td>S. Barreto</td><td class="dir">R$ 61.480</td><td class="dir"><span class="selo in">Análise</span></td></tr>
+        <tr><td>Comercial São Braz ME</td><td class="mono">28.440.116/0001-52</td><td>Consultoria</td><td>Simples Nacional</td><td>A. Camargo</td><td class="dir">R$ 38.200</td><td class="dir"><span class="selo pe">Documentos</span></td></tr>
+        <tr><td>José Nascimento</td><td class="mono">024.881.735-09</td><td>BC Cred</td><td>Prescrição</td><td>A. Camargo</td><td class="dir">R$ 4.800</td><td class="dir"><span class="selo ok">Baixado</span></td></tr>
+        <tr><td>Rita Cerqueira</td><td class="mono">771.204.885-30</td><td>BC Cred</td><td>Revisão de encargos</td><td>R. Menezes</td><td class="dir">R$ 9.400</td><td class="dir"><span class="selo in">Análise</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- ══ FICHA ══ -->
+  <section class="tela" data-tela="com-ficha">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Cliente · BC Consultoria</span><h2 class="titulo">Transportes Vale Norte Ltda</h2><span class="mono mudo">14.208.771/0001-63 · Lucro Real · CNAE 4930-2/02</span></div>
+      <div class="acoes"><span class="selo ok">Contrato ativo</span><button class="bt">Abrir processo</button></div>
+    </div>
+    <div class="duas">
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Ficha</h3></div>
+        <dl class="dados">
+          <div class="linha-d"><dt>Tese</dt><dd>Exclusão do ICMS da base do PIS/COFINS <span class="sub">· Tema 69, STF</span></dd></div>
+          <div class="linha-d"><dt>Período</dt><dd>01/2021 a 12/2025 <span class="sub">· 5 anos retroativos</span></dd></div>
+          <div class="linha-d"><dt>Indicado por</dt><dd>Ricardo Menezes · <span class="mono">RM-8GAC</span></dd></div>
+          <div class="linha-d"><dt>Responsável BC</dt><dd>Camila Torres</dd></div>
+          <div class="linha-d"><dt>Contrato</dt><dd>18/08/2026 às 14h07 · assinado por e-mail e CPF</dd></div>
+          <div class="linha-d"><dt>Contato</dt><dd>Sr. Elias (financeiro) · (71) 98812-3390</dd></div>
+        </dl>
+        <div class="secao">
+          <div class="secao-cab"><h3 class="secao-tit">Crédito apurado</h3><span class="sub">conferido em 29/08 por Camila Torres</span></div>
+          <div class="calculo">
+            <div class="calc-l"><span class="mudo">Principal apurado</span><span>R$ 361.884,00</span></div>
+            <div class="calc-l"><span class="mudo">Correção pela Selic</span><span>R$ 125.436,00</span></div>
+            <div class="calc-l"><span class="mudo">Crédito total</span><span>R$ 487.320,00</span></div>
+            <div class="calc-l"><span class="mudo">Honorário de êxito · 20%</span><span>R$ 97.464,00</span></div>
+            <div class="calc-l"><span class="mudo">Comissão da rede · 12% do honorário</span><span>R$ 11.696,00</span></div>
+            <div class="calc-l total"><span class="mudo">Líquido para o cliente</span><b>R$ 389.856,00</b></div>
+          </div>
+          <p class="nota">A comissão sai do honorário, nunca do valor do cliente. Os três números na mesma tela porque é a primeira pergunta de toda reunião.</p>
+        </div>
+      </div>
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Kit documental</h3><span class="sub">5 de 6</span></div>
+        <div class="docs">
+          <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Contrato social</span><span class="doc-x">18/08</span></div>
+          <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Cartão CNPJ</span><span class="doc-x">18/08</span></div>
+          <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Procuração</span><span class="doc-x">19/08</span></div>
+          <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">EFD-Contribuições</span><span class="doc-x">21/08</span></div>
+          <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Balancetes 2021–2025</span><span class="doc-x">21/08</span></div>
+          <div class="doc"><span class="doc-m"></span><span class="doc-n">Certidão negativa</span><span class="doc-x">falta</span></div>
+        </div>
+        <div class="secao">
+          <div class="secao-cab"><h3 class="secao-tit">Histórico</h3></div>
+          <div class="log">
+            <div class="log-l"><span class="quando">29/08 16:02</span><b>C. Torres</b><span>conferiu o cálculo</span></div>
+            <div class="log-l"><span class="quando">21/08 09:14</span><b>Cliente</b><span>enviou balancetes</span></div>
+            <div class="log-l"><span class="quando">18/08 14:07</span><b>Cliente</b><span>assinou o contrato</span></div>
+            <div class="log-l"><span class="quando">02/07 11:20</span><b>R. Menezes</b><span>indicou o caso</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PROPOSTAS ══ -->
+  <section class="tela" data-tela="com-propostas">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Comercial · propostas</span><h2 class="titulo">4 aguardando resposta</h2></div>
+      <div class="acoes"><button class="bt forte">Gerar proposta</button></div>
+    </div>
+    <div class="rolar"><table class="tab">
+      <thead><tr><th>Cliente</th><th>Tese</th><th class="dir">Crédito</th><th class="dir">Honorário</th><th class="dir">Enviada</th><th class="dir">Abriu</th><th class="dir">Situação</th></tr></thead>
+      <tbody>
+        <tr><td>Construtora Ondina Ltda</td><td>PIS/COFINS</td><td class="dir">R$ 213.700</td><td class="dir">20% · R$ 42.740</td><td class="dir">05/09</td><td class="dir">3×</td><td class="dir"><span class="selo at">Aguardando</span></td></tr>
+        <tr><td>Supermercado Pituba ME</td><td>PIS/COFINS</td><td class="dir">R$ 88.150</td><td class="dir">20% · R$ 17.630</td><td class="dir">02/09</td><td class="dir">1×</td><td class="dir"><span class="selo pe">5 dias</span></td></tr>
+        <tr><td>Auto Center Pernambués</td><td>INSS verbas</td><td class="dir">R$ 74.000</td><td class="dir">25% · R$ 18.500</td><td class="dir">28/08</td><td class="dir">6×</td><td class="dir"><span class="selo ok">Aceita</span></td></tr>
+        <tr><td>Padaria Sete Portas ME</td><td>Simples Nacional</td><td class="dir">R$ 12.400</td><td class="dir">25% · R$ 3.100</td><td class="dir">19/08</td><td class="dir">2×</td><td class="dir"><span class="selo pe">Recusada</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="nota">A coluna <b>Abriu</b> conta quantas vezes o cliente abriu o PDF. Proposta aberta seis vezes e não respondida é ligação; proposta nunca aberta é e-mail errado — são problemas diferentes com soluções diferentes.</p>
+  </section>
+
+  <!-- ══ CONTRATOS ══ -->
+  <section class="tela" data-tela="com-contratos">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Comercial · contratos</span><h2 class="titulo">18 contratos ativos</h2></div>
+      <div class="acoes"><button class="bt">Modelos</button><button class="bt forte">Novo contrato</button></div>
+    </div>
+    <div class="rolar"><table class="tab">
+      <thead><tr><th>Contrato</th><th>Parte</th><th>Modelo</th><th class="dir">Honorário</th><th class="dir">Assinado</th><th class="dir">Registro</th><th class="dir">Situação</th></tr></thead>
+      <tbody>
+        <tr><td>Consultoria tributária</td><td>Transportes Vale Norte</td><td>Êxito v3</td><td class="dir">20%</td><td class="dir">18/08 14h07</td><td class="dir mono">a4f0…9d2c</td><td class="dir"><span class="selo ok">Vigente</span></td></tr>
+        <tr><td>Consultoria tributária</td><td>Metalúrgica Ipiranga</td><td>Êxito v3</td><td class="dir">20%</td><td class="dir">27/08 10h33</td><td class="dir mono">7b21…04ae</td><td class="dir"><span class="selo ok">Vigente</span></td></tr>
+        <tr><td>Parceria de indicação</td><td>Ana B. Camargo</td><td>Parceria v2</td><td class="dir">8/3/1%</td><td class="dir">04/04 19h50</td><td class="dir mono">c930…11f7</td><td class="dir"><span class="selo ok">Vigente</span></td></tr>
+        <tr><td>Parceria de indicação</td><td>Ricardo Menezes</td><td>Parceria v2</td><td class="dir">8/3/1%</td><td class="dir">12/03 10h41</td><td class="dir mono">a4f0…9d2c</td><td class="dir"><span class="selo ok">Vigente</span></td></tr>
+        <tr><td>Negociação de dívida</td><td>José Nascimento</td><td>BC Cred v1</td><td class="dir">30%</td><td class="dir">11/08 08h12</td><td class="dir mono">e552…7c30</td><td class="dir"><span class="selo ne">Encerrado</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="nota">Cada assinatura grava data, hora, documento do signatário e uma impressão do conteúdo. Alterar uma vírgula depois muda a impressão — e a diferença aparece. Nem o administrador consegue apagar a linha.</p>
+  </section>
+
+  <!-- ══ PROCESSOS ══ -->
+  <section class="tela" data-tela="jur-processos">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Jurídico · escritório parceiro</span><h2 class="titulo">Transportes Vale Norte × União</h2><span class="mono mudo">1004327-58.2026.4.01.3300 · 3ª Vara Federal · Salvador/BA</span></div>
+      <div class="acoes"><span class="selo at">Conclusos para sentença</span></div>
+    </div>
+    <div class="mod-c">
+      <div class="duas">
+        <div>
+          <div class="secao-cab"><h3 class="secao-tit">Andamento</h3><span class="sub">última leitura hoje, 07:15</span></div>
+          <div class="fases">
+            <div class="fase feita"><div class="fase-c"><span class="fase-n">Protocolo da inicial</span><span class="fase-d">02/09/2026</span></div><p class="fase-t">Ação declaratória com pedido de repetição de indébito, distribuída por sorteio à 3ª Vara Federal.</p></div>
+            <div class="fase feita"><div class="fase-c"><span class="fase-n">Citação da União</span><span class="fase-d">11/09/2026</span></div><p class="fase-t">Procuradoria da Fazenda Nacional citada, prazo de 30 dias para contestar.</p></div>
+            <div class="fase agora"><div class="fase-c"><span class="fase-n">Contestação e réplica</span><span class="fase-d">08/10/2026</span></div><p class="fase-t">Réplica protocolada em 22/10. Autos conclusos para sentença desde 24/10.</p></div>
+            <div class="fase futura"><div class="fase-c"><span class="fase-n">Sentença</span><span class="fase-d">previsão 1º tri/2027</span></div><p class="fase-t">Tese pacificada pelo STF no Tema 69 — a discussão restante costuma ser só o período alcançado.</p></div>
+            <div class="fase futura"><div class="fase-c"><span class="fase-n">Trânsito em julgado</span><span class="fase-d">—</span></div></div>
+            <div class="fase futura"><div class="fase-c"><span class="fase-n">Habilitação e compensação</span><span class="fase-d">—</span></div><p class="fase-t">Só aqui o crédito vira dinheiro e o êxito é confirmado — é o gatilho que libera a comissão da rede.</p></div>
+          </div>
+        </div>
+        <div>
+          <div class="secao-cab"><h3 class="secao-tit">Peças</h3></div>
+          <div class="docs">
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Petição inicial</span><span class="doc-x">PDF</span></div>
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Planilha de cálculo</span><span class="doc-x">XLSX</span></div>
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Contestação</span><span class="doc-x">PDF</span></div>
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Réplica</span><span class="doc-x">PDF</span></div>
+          </div>
+          <div class="secao">
+            <div class="secao-cab"><h3 class="secao-tit">Ligado a</h3></div>
+            <div class="dados">
+              <div class="linha-d"><dt>Caso</dt><dd>Transportes Vale Norte</dd></div>
+              <div class="linha-d"><dt>Crédito</dt><dd class="num">R$ 487.320,00</dd></div>
+              <div class="linha-d"><dt>Advogada</dt><dd>Dra. Larissa Fontes</dd></div>
+              <div class="linha-d"><dt>Comissão retida</dt><dd class="num">R$ 11.696,00</dd></div>
+            </div>
+          </div>
+          <p class="nota">Este módulo é o que separa a versão completa da enxuta. Sem ele o caso é entregue ao escritório e o sistema para ali — o acompanhamento volta a ser planilha e e-mail.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PRAZOS ══ -->
+  <section class="tela" data-tela="jur-prazos">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Jurídico · agenda</span><h2 class="titulo">Prazos dos próximos 30 dias</h2></div>
+      <div class="acoes"><button class="bt">Só os meus</button><button class="bt forte">Novo prazo</button></div>
+    </div>
+    <div class="mod-c">
+      <div class="rolar"><table class="tab">
+        <thead><tr><th>Vence</th><th>Processo</th><th>Cliente</th><th>Ato</th><th>Responsável</th><th class="dir">Situação</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">12/09</td><td class="mono">1007742-11.2026</td><td>Metalúrgica Ipiranga</td><td>Réplica à contestação</td><td>Dra. Larissa Fontes</td><td class="dir"><span class="selo pe">5 dias</span></td></tr>
+          <tr><td class="mono">19/09</td><td class="mono">1002218-04.2025</td><td>Hotel Barra Mar</td><td>Habilitação do crédito</td><td>Dra. Larissa Fontes</td><td class="dir"><span class="selo at">12 dias</span></td></tr>
+          <tr><td class="mono">30/09</td><td class="mono">1004327-58.2026</td><td>Transportes Vale Norte</td><td>Memoriais</td><td>Dra. Larissa Fontes</td><td class="dir"><span class="selo ne">23 dias</span></td></tr>
+          <tr><td class="mono">06/10</td><td class="mono">1009110-72.2026</td><td>Auto Center Pernambués</td><td>Emenda à inicial</td><td>Dr. Igor Peixoto</td><td class="dir"><span class="selo ne">29 dias</span></td></tr>
+        </tbody>
+      </table></div>
+      <p class="nota">Prazo perdido em recuperação tributária não é multa — é o crédito inteiro. Por isso o alerta sai por push e WhatsApp, não só por e-mail, e escala para o segundo responsável se ninguém confirmar em 24h.</p>
+    </div>
+  </section>
+
+  <!-- ══ HONORÁRIOS ══ -->
+  <section class="tela" data-tela="fin-honorarios">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Financeiro · receita</span><h2 class="titulo">Honorários</h2></div>
+      <div class="acoes"><button class="bt">2026</button><button class="bt">Exportar</button></div>
+    </div>
+    <div class="reguas" style="margin-bottom:26px">
+      <div class="regua"><span class="regua-rot">Contratado</span><span class="regua-val d num">R$ 481.400</span><span class="regua-pe">18 contratos</span></div>
+      <div class="regua"><span class="regua-rot">Realizado</span><span class="regua-val num">R$ 118.300</span><span class="regua-pe">4 êxitos</span></div>
+      <div class="regua"><span class="regua-rot">A realizar</span><span class="regua-val num">R$ 363.100</span><span class="regua-pe">14 em andamento</span></div>
+      <div class="regua"><span class="regua-rot">Prazo médio</span><span class="regua-val num">14 m</span><span class="regua-pe">contrato → êxito</span></div>
+    </div>
+    <div class="rolar"><table class="tab">
+      <thead><tr><th>Cliente</th><th>Contrato</th><th class="dir">Crédito</th><th class="dir">%</th><th class="dir">Honorário</th><th class="dir">Comissão</th><th class="dir">Margem BC</th><th class="dir">Situação</th></tr></thead>
+      <tbody>
+        <tr><td>Transportes Vale Norte</td><td>18/08</td><td class="dir">R$ 487.320</td><td class="dir">20%</td><td class="dir">R$ 97.464</td><td class="dir">R$ 11.696</td><td class="dir">R$ 85.768</td><td class="dir"><span class="selo at">A realizar</span></td></tr>
+        <tr><td>Construtora Ondina</td><td>—</td><td class="dir">R$ 213.700</td><td class="dir">20%</td><td class="dir">R$ 42.740</td><td class="dir">R$ 5.129</td><td class="dir">R$ 37.611</td><td class="dir"><span class="selo ne">Proposta</span></td></tr>
+        <tr><td>Metalúrgica Ipiranga</td><td>27/08</td><td class="dir">R$ 142.900</td><td class="dir">20%</td><td class="dir">R$ 28.580</td><td class="dir">R$ 3.430</td><td class="dir">R$ 25.150</td><td class="dir"><span class="selo ok">Realizado</span></td></tr>
+        <tr><td>Auto Center Pernambués</td><td>29/08</td><td class="dir">R$ 74.000</td><td class="dir">25%</td><td class="dir">R$ 18.500</td><td class="dir">R$ 2.220</td><td class="dir">R$ 16.280</td><td class="dir"><span class="selo ok">Realizado</span></td></tr>
+        <tr><td>José Nascimento</td><td>11/08</td><td class="dir">R$ 4.800</td><td class="dir">30%</td><td class="dir">R$ 1.440</td><td class="dir">R$ 173</td><td class="dir">R$ 1.267</td><td class="dir"><span class="selo ok">Realizado</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- ══ COMISSÕES ══ -->
+  <section class="tela" data-tela="fin-comissoes">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Financeiro · competência 09/2026</span><h2 class="titulo">Comissões a pagar</h2></div>
+      <div class="acoes"><button class="bt">Gerar remessa Pix</button><button class="bt forte">Fechar competência</button></div>
+    </div>
+    <div class="reguas" style="margin-bottom:26px">
+      <div class="regua"><span class="regua-rot">Bruto</span><span class="regua-val num">R$ 58.116</span><span class="regua-pe">31 linhas</span></div>
+      <div class="regua"><span class="regua-rot">Estornos</span><span class="regua-val num" style="color:var(--perigo)">— R$ 396</span><span class="regua-pe">2 casos caídos</span></div>
+      <div class="regua"><span class="regua-rot">A pagar</span><span class="regua-val d num">R$ 57.720</span><span class="regua-pe">em 05/10</span></div>
+      <div class="regua"><span class="regua-rot">Bloqueadas</span><span class="regua-val num">R$ 3.104</span><span class="regua-pe">1 sem dado bancário</span></div>
+    </div>
+    <div class="rolar"><table class="tab">
+      <thead><tr><th>Indicador</th><th>Chave Pix</th><th class="dir">Casos</th><th class="dir">Nível 1</th><th class="dir">Rede</th><th class="dir">Estorno</th><th class="dir">A pagar</th><th class="dir">Situação</th></tr></thead>
+      <tbody>
+        <tr><td>Ricardo Menezes <span class="mono mudo">RM-8GAC</span></td><td class="mono">318.774.905-22</td><td class="dir num">3</td><td class="dir num">R$ 19.229</td><td class="dir num">—</td><td class="dir num" style="color:var(--perigo)">— 124</td><td class="dir num">R$ 18.940</td><td class="dir"><span class="selo ok">Liberado</span></td></tr>
+        <tr><td>Ana B. Camargo <span class="mono mudo">AC-4471</span></td><td class="mono">ana.camargo@…</td><td class="dir num">6</td><td class="dir num">R$ 5.028</td><td class="dir num">R$ 1.290</td><td class="dir num">—</td><td class="dir num">R$ 6.318</td><td class="dir"><span class="selo ok">Liberado</span></td></tr>
+        <tr><td>Juliana Prado <span class="mono mudo">JP-5540</span></td><td class="mono mudo">não informada</td><td class="dir num">2</td><td class="dir num">R$ 3.104</td><td class="dir num">—</td><td class="dir num">—</td><td class="dir num">R$ 3.104</td><td class="dir"><span class="selo pe">Bloqueado</span></td></tr>
+        <tr><td>Sueli Barreto <span class="mono mudo">SB-9033</span></td><td class="mono">(71) 99043-1180</td><td class="dir num">4</td><td class="dir num">R$ 1.146</td><td class="dir num">R$ 382</td><td class="dir num">—</td><td class="dir num">R$ 1.528</td><td class="dir"><span class="selo ok">Liberado</span></td></tr>
+        <tr><td>Marcos Dias <span class="mono mudo">MD-7712</span></td><td class="mono">031.559.204-77</td><td class="dir num">3</td><td class="dir num">R$ 894</td><td class="dir num">—</td><td class="dir num" style="color:var(--perigo)">— 272</td><td class="dir num">R$ 622</td><td class="dir"><span class="selo ok">Liberado</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="nota">Comissão sem chave Pix conferida fica <b>bloqueada, não some</b>: continua na linha, visível para os dois lados, até a pessoa preencher. Comissão que desaparece da tela é a origem de metade das brigas em rede de indicação.</p>
+  </section>
+
+  <!-- ══ FECHAMENTO ══ -->
+  <section class="tela" data-tela="fin-fechamento">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Financeiro · fechamento</span><h2 class="titulo">Competências</h2></div>
+      <div class="acoes"><button class="bt">Regras de corte</button></div>
+    </div>
+    <div class="rolar"><table class="tab">
+      <thead><tr><th>Competência</th><th>Fechada em</th><th>Por</th><th class="dir">Indicadores</th><th class="dir">Bruto</th><th class="dir">Estornos</th><th class="dir">Pago</th><th class="dir">Situação</th></tr></thead>
+      <tbody>
+        <tr><td>09/2026</td><td>—</td><td>—</td><td class="dir num">17</td><td class="dir num">R$ 58.116</td><td class="dir num">— R$ 396</td><td class="dir num">R$ 57.720</td><td class="dir"><span class="selo at">Aberta</span></td></tr>
+        <tr><td>08/2026</td><td>01/09 08h00</td><td>Camila Torres</td><td class="dir num">14</td><td class="dir num">R$ 31.402</td><td class="dir num">— R$ 0</td><td class="dir num">R$ 31.402</td><td class="dir"><span class="selo ok">Paga</span></td></tr>
+        <tr><td>07/2026</td><td>01/08 08h00</td><td>Camila Torres</td><td class="dir num">11</td><td class="dir num">R$ 18.870</td><td class="dir num">— R$ 540</td><td class="dir num">R$ 18.330</td><td class="dir"><span class="selo ok">Paga</span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="secao duas-eq">
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Regra de corte</h3></div>
+        <div class="dados">
+          <div class="linha-d"><dt>Fecha</dt><dd>Dia 1º, às 08h00</dd></div>
+          <div class="linha-d"><dt>Paga</dt><dd>Dia 5, por Pix em lote</dd></div>
+          <div class="linha-d"><dt>Entra na competência</dt><dd>Êxito confirmado até o último dia do mês</dd></div>
+          <div class="linha-d"><dt>Valor mínimo</dt><dd>R$ 50,00 — abaixo disso acumula</dd></div>
+        </div>
+      </div>
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Depois de fechada</h3></div>
+        <p class="nota" style="margin-top:0">Competência fechada não é editável. Correção entra como lançamento na competência seguinte, com motivo obrigatório e nome de quem lançou — do jeito que a contabilidade espera receber, e do jeito que o indicador consegue conferir.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ESTORNOS ══ -->
+  <section class="tela" data-tela="fin-estornos">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Financeiro · estornos</span><h2 class="titulo">2 estornos na competência</h2></div>
+    </div>
+    <div class="rolar"><table class="tab">
+      <thead><tr><th>Caso</th><th>Motivo</th><th>Quem lançou</th><th>Atinge</th><th class="dir">Original</th><th class="dir">Estorno</th><th class="dir">Competência</th></tr></thead>
+      <tbody>
+        <tr><td>Padaria Sete Portas ME</td><td>Cliente recusou a proposta após assinatura</td><td>Camila Torres · 03/09</td><td>3 indicadores</td><td class="dir">R$ 372</td><td class="dir" style="color:var(--perigo)">— R$ 372</td><td class="dir">09/2026</td></tr>
+        <tr><td>Mercado Vila Laura</td><td>Crédito reduzido após reanálise do período</td><td>Camila Torres · 05/09</td><td>1 indicador</td><td class="dir">R$ 148</td><td class="dir" style="color:var(--perigo)">— R$ 24</td><td class="dir">09/2026</td></tr>
+      </tbody>
+    </table></div>
+    <p class="nota">Todo estorno exige motivo escrito e atinge a árvore inteira que ganhou naquele caso, proporcionalmente. O indicador recebe o aviso no mesmo dia com o motivo — nunca descobre pelo saldo menor.</p>
+  </section>
+
+  <!-- ══ VISÃO GERAL ══ -->
+  <section class="tela" data-tela="ges-geral">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">BC Consultoria &amp; Assessoria · administração</span><h2 class="titulo">Visão geral da operação</h2></div>
+      <div class="acoes"><button class="bt">Setembro 2026</button></div>
+    </div>
+    <div class="reguas">
+      <div class="regua"><span class="regua-rot">Crédito sob contrato</span><span class="regua-val d num">R$ 2,4 mi</span><span class="regua-pe">18 contratos</span></div>
+      <div class="regua"><span class="regua-rot">Honorário projetado</span><span class="regua-val num">R$ 481 mil</span><span class="regua-pe">média 20%</span></div>
+      <div class="regua"><span class="regua-rot">Comissão a pagar</span><span class="regua-val num">R$ 57.720</span><span class="regua-pe">12% do honorário</span></div>
+      <div class="regua"><span class="regua-rot">Indicadores</span><span class="regua-val num">41</span><span class="regua-pe">9 novos no mês</span></div>
+      <div class="regua"><span class="regua-rot">Casos na esteira</span><span class="regua-val num">28</span><span class="regua-pe">7 parados</span></div>
+    </div>
+    <div class="secao duas-eq">
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Onde os casos morrem</h3><span class="sub">últimos 90 dias</span></div>
+        <div class="rolar"><table class="tab">
+          <thead><tr><th>Etapa</th><th class="dir">Entraram</th><th class="dir">Passaram</th><th class="dir">Conversão</th></tr></thead>
+          <tbody>
+            <tr><td>Indicado → Documentos</td><td class="dir num">74</td><td class="dir num">61</td><td class="dir num">82%</td></tr>
+            <tr><td>Documentos → Análise</td><td class="dir num">61</td><td class="dir num">34</td><td class="dir num" style="color:var(--perigo)">56%</td></tr>
+            <tr><td>Análise → Proposta</td><td class="dir num">34</td><td class="dir num">29</td><td class="dir num">85%</td></tr>
+            <tr><td>Proposta → Contrato</td><td class="dir num">29</td><td class="dir num">18</td><td class="dir num">62%</td></tr>
+          </tbody>
+        </table></div>
+        <p class="nota">O gargalo é documento, não venda: quase metade dos casos morre esperando papel do cliente. É o número que justifica o aviso automático e o upload pelo celular.</p>
+      </div>
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Top indicadores</h3><span class="sub">no ano</span></div>
+        <div class="rolar"><table class="tab">
+          <thead><tr><th>Indicador</th><th class="dir">Casos</th><th class="dir">Fechados</th><th class="dir">Gerado</th></tr></thead>
+          <tbody>
+            <tr><td>Ricardo Menezes</td><td class="dir num">17</td><td class="dir num">6</td><td class="dir num">R$ 1,1 mi</td></tr>
+            <tr><td>Ana B. Camargo</td><td class="dir num">14</td><td class="dir num">6</td><td class="dir num">R$ 512 mil</td></tr>
+            <tr><td>Juliana Prado</td><td class="dir num">9</td><td class="dir num">2</td><td class="dir num">R$ 288 mil</td></tr>
+            <tr><td>Sueli Barreto</td><td class="dir num">7</td><td class="dir num">4</td><td class="dir num">R$ 174 mil</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ REGRAS DE COMISSÃO ══ -->
+  <section class="tela" data-tela="ges-regras">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Gestão · regras</span><h2 class="titulo">Comissão da rede</h2></div>
+      <div class="acoes"><button class="bt">Histórico de versões</button><button class="bt forte">Publicar nova versão</button></div>
+    </div>
+    <div class="duas">
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Versão vigente · v2</h3><span class="sub">desde 01/04/2026</span></div>
+        <div class="form">
+          <div class="campo"><label>Nível 1 — indicação direta</label><input value="8 %"></div>
+          <div class="campo"><label>Nível 2 — indicado do indicado</label><input value="3 %"></div>
+          <div class="campo"><label>Nível 3</label><input value="1 %"></div>
+          <div class="campo"><label>Profundidade máxima</label><select><option>3 níveis</option><option>2 níveis</option><option>Ilimitada</option></select></div>
+          <div class="campo"><label>Base de cálculo</label><select><option>Honorário da consultoria</option><option>Crédito recuperado</option></select><span class="dica">Nunca o valor que o cliente recebe</span></div>
+          <div class="campo"><label>Liberação</label><select><option>Na confirmação do êxito</option><option>Na assinatura do contrato</option><option>No recebimento do honorário</option></select></div>
+        </div>
+        <div class="secao">
+          <div class="secao-cab"><h3 class="secao-tit">Condições</h3></div>
+          <div class="opcao"><span class="chavinha on"></span><span><span class="opcao-t">Regra vale a partir da data de publicação</span><span class="opcao-d">Contrato assinado antes continua na versão anterior até encerrar. Desligar isso aplica a nova regra a tudo — e reabre discussão com quem já fechou.</span></span></div>
+          <div class="opcao"><span class="chavinha on"></span><span><span class="opcao-t">Estorno atinge a árvore inteira</span><span class="opcao-d">Caso que cai estorna proporcionalmente todos os níveis que ganharam nele.</span></span></div>
+          <div class="opcao"><span class="chavinha on"></span><span><span class="opcao-t">Exigir dado bancário conferido</span><span class="opcao-d">Comissão fica visível e bloqueada até a chave Pix ser validada.</span></span></div>
+          <div class="opcao"><span class="chavinha"></span><span><span class="opcao-t">Exigir volume mínimo para nível 2 e 3</span><span class="opcao-d">Só recebe da rede quem fechou pelo menos 1 caso próprio no trimestre.</span></span></div>
+        </div>
+      </div>
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Simulação</h3></div>
+        <div class="calculo">
+          <div class="calc-l"><span class="mudo">Crédito do caso</span><span>R$ 487.320</span></div>
+          <div class="calc-l"><span class="mudo">Honorário 20%</span><span>R$ 97.464</span></div>
+          <div class="calc-l"><span class="mudo">Nível 1 · 8%</span><span>R$ 7.797</span></div>
+          <div class="calc-l"><span class="mudo">Nível 2 · 3%</span><span>R$ 2.924</span></div>
+          <div class="calc-l"><span class="mudo">Nível 3 · 1%</span><span>R$ 975</span></div>
+          <div class="calc-l total"><span class="mudo">Fica com a BC</span><b>R$ 85.768</b></div>
+        </div>
+        <p class="nota">Toda mudança aqui gera uma versão nova, com data, autor e o texto anterior guardado. É o que permite responder “por que eu recebi 3% e não 8%” dois anos depois.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PRODUTOS E TESES ══ -->
+  <section class="tela" data-tela="ges-produtos">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Gestão · catálogo</span><h2 class="titulo">Produtos e teses</h2></div>
+      <div class="acoes"><button class="bt forte">Nova tese</button></div>
+    </div>
+    <div class="rolar"><table class="tab">
+      <thead><tr><th>Tese</th><th>Frente</th><th>Kit documental</th><th class="dir">Honorário</th><th class="dir">Prazo médio</th><th class="dir">Casos</th><th class="dir">Situação</th></tr></thead>
+      <tbody>
+        <tr><td>Exclusão do ICMS da base do PIS/COFINS<div class="sub">Tema 69 · STF</div></td><td>Consultoria</td><td>6 documentos</td><td class="dir">20%</td><td class="dir">14 meses</td><td class="dir num">11</td><td class="dir"><span class="selo ok">Ativa</span></td></tr>
+        <tr><td>INSS sobre verbas indenizatórias<div class="sub">aviso prévio, terço de férias</div></td><td>Consultoria</td><td>5 documentos</td><td class="dir">20%</td><td class="dir">11 meses</td><td class="dir num">6</td><td class="dir"><span class="selo ok">Ativa</span></td></tr>
+        <tr><td>Revisão de Simples Nacional<div class="sub">segregação de receitas</div></td><td>Consultoria</td><td>4 documentos</td><td class="dir">25%</td><td class="dir">4 meses</td><td class="dir num">8</td><td class="dir"><span class="selo ok">Ativa</span></td></tr>
+        <tr><td>Prescrição de dívida negativada<div class="sub">quinquenal</div></td><td>BC Cred</td><td>3 documentos</td><td class="dir">30%</td><td class="dir">2 meses</td><td class="dir num">19</td><td class="dir"><span class="selo ok">Ativa</span></td></tr>
+        <tr><td>Revisão de encargos contratuais</td><td>BC Cred</td><td>3 documentos</td><td class="dir">30%</td><td class="dir">3 meses</td><td class="dir num">7</td><td class="dir"><span class="selo ok">Ativa</span></td></tr>
+        <tr><td>Créditos de PIS/COFINS sobre insumos</td><td>Consultoria</td><td>7 documentos</td><td class="dir">25%</td><td class="dir">—</td><td class="dir num">0</td><td class="dir"><span class="selo ne">Rascunho</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="nota">Cada tese carrega o próprio kit documental, o próprio honorário padrão e o próprio texto de proposta. Cadastrar uma tese nova não precisa de programador — é o que permite a BC abrir uma frente sem me chamar.</p>
+  </section>
+
+  <!-- ══ EQUIPE ══ -->
+  <section class="tela" data-tela="ges-equipe">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Gestão · pessoas</span><h2 class="titulo">Equipe e acessos</h2></div>
+      <div class="acoes"><button class="bt forte">Adicionar pessoa</button></div>
+    </div>
+    <div class="rolar"><table class="tab">
+      <thead><tr><th>Pessoa</th><th>Perfil</th><th>Enxerga</th><th>Pode</th><th class="dir">Último acesso</th><th class="dir">Situação</th></tr></thead>
+      <tbody>
+        <tr><td>Bruno Carvalho<div class="sub">sócio administrador</div></td><td>Administração</td><td>Tudo</td><td>Tudo, inclusive regras de comissão</td><td class="dir">hoje 08h12</td><td class="dir"><span class="selo ok">Ativo</span></td></tr>
+        <tr><td>Camila Torres</td><td>Operação</td><td>Esteira, clientes, contratos</td><td>Fechar competência e conferir cálculo</td><td class="dir">hoje 07h40</td><td class="dir"><span class="selo ok">Ativo</span></td></tr>
+        <tr><td>Dra. Larissa Fontes<div class="sub">escritório parceiro</div></td><td>Jurídico</td><td>Só os processos dela</td><td>Lançar andamento e prazo</td><td class="dir">ontem</td><td class="dir"><span class="selo ok">Ativo</span></td></tr>
+        <tr><td>Dr. Igor Peixoto<div class="sub">escritório parceiro</div></td><td>Jurídico</td><td>Só os processos dele</td><td>Lançar andamento e prazo</td><td class="dir">2 dias</td><td class="dir"><span class="selo ok">Ativo</span></td></tr>
+        <tr><td>Ricardo Menezes</td><td>Indicador</td><td>Só a própria rede e extrato</td><td>Indicar e acompanhar</td><td class="dir">hoje 09h02</td><td class="dir"><span class="selo ok">Ativo</span></td></tr>
+        <tr><td>Tiago Amorim</td><td>Operação</td><td>—</td><td>—</td><td class="dir">14/07</td><td class="dir"><span class="selo ne">Desligado</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="nota">O advogado parceiro enxerga <b>só os processos dele</b> — não vê a carteira inteira, não vê comissão, não vê rede. Sem essa separação, abrir a plataforma para escritório parceiro seria entregar a base de clientes da BC.</p>
+  </section>
+
+  <!-- ══ IA ══ -->
+  <section class="tela" data-tela="ges-ia">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Gestão · atendimento</span><h2 class="titulo">Atendimento e IA</h2></div>
+      <div class="acoes"><button class="bt">Ver conversas</button><button class="bt forte">Editar instruções</button></div>
+    </div>
+    <div class="duas">
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">O que ela faz</h3></div>
+        <div class="opcao"><span class="chavinha on"></span><span><span class="opcao-t">Responde no site e no WhatsApp</span><span class="opcao-d">Entende áudio do cliente e responde por texto, 24 horas.</span></span></div>
+        <div class="opcao"><span class="chavinha on"></span><span><span class="opcao-t">Faz a triagem antes de virar caso</span><span class="opcao-d">Pergunta regime, faturamento e período para descartar quem não tem crédito — sem gastar hora da equipe.</span></span></div>
+        <div class="opcao"><span class="chavinha on"></span><span><span class="opcao-t">Cobra documento que falta</span><span class="opcao-d">Lembra o cliente do kit a cada 3 dias, com ritmo humano, e para quando ele responde.</span></span></div>
+        <div class="opcao"><span class="chavinha on"></span><span><span class="opcao-t">Espera o humano por 10 minutos</span><span class="opcao-d">Se alguém da equipe está digitando, ela segura a resposta e só assume se ninguém responder.</span></span></div>
+        <div class="opcao"><span class="chavinha"></span><span><span class="opcao-t">Informar valor estimado de crédito</span><span class="opcao-d">Desligado de propósito: estimativa dada por robô vira expectativa, e expectativa frustrada vira reclamação.</span></span></div>
+        <div class="secao">
+          <div class="secao-cab"><h3 class="secao-tit">Volume</h3></div>
+          <div class="reguas">
+            <div class="regua"><span class="regua-rot">Conversas no mês</span><span class="regua-val num">418</span><span class="regua-pe">61% fora do horário</span></div>
+            <div class="regua"><span class="regua-rot">Resolvidas sem humano</span><span class="regua-val num">73%</span><span class="regua-pe">305 conversas</span></div>
+            <div class="regua"><span class="regua-rot">Viraram caso</span><span class="regua-val d num">31</span><span class="regua-pe">7,4%</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Conversa de hoje</h3></div>
+        <div class="chat">
+          <div class="chat-t"><span class="chapeu">WhatsApp · (71) 98812-…</span><span class="selo ok">IA</span></div>
+          <div class="chat-c">
+            <div class="balao dele"><span class="balao-q">Cliente · 22h14</span>vi o anúncio, minha empresa é do lucro presumido, serve?</div>
+            <div class="balao dela"><span class="balao-q">Sofia</span>Serve, sim. No Lucro Presumido a tese mais comum é a exclusão do ICMS da base do PIS/COFINS. Duas perguntas rápidas: a empresa vende mercadoria com ICMS destacado na nota, e está ativa desde antes de 2021?</div>
+            <div class="balao dele"><span class="balao-q">Cliente · 22h16</span>sim as duas, desde 2017</div>
+            <div class="balao dela"><span class="balao-q">Sofia</span>Então dá para levantar os cinco anos completos. Vou abrir seu caso e o Ricardo, que te indicou, acompanha junto. Me manda o CNPJ que eu já deixo pronto para a análise.</div>
+          </div>
+        </div>
+        <p class="nota">Ela não promete valor e não fecha contrato — qualifica, abre o caso e passa adiante. O teto do que ela pode dizer é definido aqui e vale para todas as conversas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ AUDITORIA ══ -->
+  <section class="tela" data-tela="ges-auditoria">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Gestão · registro</span><h2 class="titulo">Auditoria</h2></div>
+      <div class="acoes"><button class="bt">Filtrar por pessoa</button><button class="bt">Exportar</button></div>
+    </div>
+    <div class="log">
+      <div class="log-l"><span class="quando">07/09 09:02</span><b>R. Menezes</b><span>entrou pelo aplicativo · IP 189.34.…</span></div>
+      <div class="log-l"><span class="quando">05/09 16:41</span><b>C. Torres</b><span>lançou estorno em Mercado Vila Laura · motivo: crédito reduzido após reanálise</span></div>
+      <div class="log-l"><span class="quando">03/09 11:08</span><b>C. Torres</b><span>lançou estorno em Padaria Sete Portas · motivo: cliente recusou após assinatura</span></div>
+      <div class="log-l"><span class="quando">01/09 08:00</span><b>Sistema</b><span>fechou a competência 08/2026 · 14 indicadores · R$ 31.402</span></div>
+      <div class="log-l"><span class="quando">29/08 16:02</span><b>C. Torres</b><span>conferiu cálculo de Transportes Vale Norte · R$ 487.320,00</span></div>
+      <div class="log-l"><span class="quando">27/08 10:33</span><b>Metalúrgica Ipiranga</b><span>assinou contrato · registro 7b21…04ae</span></div>
+      <div class="log-l"><span class="quando">14/08 09:20</span><b>B. Carvalho</b><span>publicou regra de comissão v2 · 8/3/1% · anterior guardada</span></div>
+      <div class="log-l"><span class="quando">14/07 17:55</span><b>B. Carvalho</b><span>desligou o acesso de Tiago Amorim</span></div>
+    </div>
+    <p class="nota">Este registro <b>não pode ser alterado nem apagado — nem pelo administrador, nem por mim</b>. É o que dá valor de prova ao histórico se uma comissão for questionada, e o que separa um sistema de uma planilha compartilhada.</p>
+  </section>
+
+  <!-- ══ CONFIGURAÇÕES ══ -->
+  <section class="tela" data-tela="ges-config">
+    <div class="cabeca">
+      <div class="cabeca-txt"><span class="chapeu">Gestão · configurações</span><h2 class="titulo">Configurações</h2></div>
+      <div class="acoes"><button class="bt forte">Salvar</button></div>
+    </div>
+    <div class="duas-eq">
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Empresas</h3></div>
+        <div class="form">
+          <div class="campo"><label>Razão social</label><input value="BC Consultoria &amp; Assessoria Ltda"></div>
+          <div class="campo"><label>CNPJ</label><input value="46.220.118/0001-04"></div>
+          <div class="campo"><label>Segunda marca</label><input value="BC Cred"><span class="dica">Contratos e contas separados</span></div>
+          <div class="campo"><label>Escritório parceiro</label><input value="Carvalho &amp; Fontes Advogados"></div>
+        </div>
+        <div class="secao">
+          <div class="secao-cab"><h3 class="secao-tit">Integrações</h3></div>
+          <div class="docs">
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">WhatsApp · linha da BC</span><span class="doc-x">conectado</span></div>
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Assinatura eletrônica</span><span class="doc-x">conectado</span></div>
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Pix em lote · Itaú</span><span class="doc-x">conectado</span></div>
+            <div class="doc"><span class="doc-m feito">✓</span><span class="doc-n">Consulta CNPJ · Receita</span><span class="doc-x">conectado</span></div>
+            <div class="doc"><span class="doc-m"></span><span class="doc-n">Acompanhamento de tribunal</span><span class="doc-x">módulo completo</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="secao-cab"><h3 class="secao-tit">Avisos</h3></div>
+        <div class="opcao"><span class="chavinha on"></span><span><span class="opcao-t">Push no celular</span><span class="opcao-d">Comissão liberada, caso parado, prazo vencendo.</span></span></div>
+        <div class="opcao"><span class="chavinha on"></span><span><span class="opcao-t">Cobrança de documento a cada 3 dias</span><span class="opcao-d">Para o cliente e para quem indicou.</span></span></div>
+        <div class="opcao"><span class="chavinha on"></span><span><span class="opcao-t">Aviso de caso parado há 7 dias</span><span class="opcao-d">Vai para o responsável e para o indicador.</span></span></div>
+        <div class="opcao"><span class="chavinha on"></span><span><span class="opcao-t">Resumo da operação 2× ao dia</span><span class="opcao-d">08h e 20h, no WhatsApp da administração.</span></span></div>
+        <div class="secao">
+          <div class="secao-cab"><h3 class="secao-tit">Aplicativo</h3></div>
+          <div class="dados">
+            <div class="linha-d"><dt>Instalação</dt><dd>Direto pela tela do celular · Android e iPhone</dd></div>
+            <div class="linha-d"><dt>Loja de apps</dt><dd class="mudo">Não usada — sem custo anual e sem espera de revisão</dd></div>
+            <div class="linha-d"><dt>Endereço</dt><dd class="mono">app.bchub.com.br</dd></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </div>
+</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var telas = document.querySelectorAll("[data-tela]");
+  var itens = document.querySelectorAll("[data-vai]");
+  var tGrupo = document.getElementById("t-grupo");
+  var tTela  = document.getElementById("t-tela");
+  var entrada = document.getElementById("entrada");
+  var app = document.getElementById("app");
+
+  /* Quem é quem: cada perfil enxerga um conjunto de grupos do menu e
+     começa numa tela diferente. O menu é REMONTADO na entrada — não é o
+     mesmo painel escondendo botão. */
+  var PERFIS = {
+    indicador:  { nome:"Ricardo Menezes",       bola:"R", email:"ricardo@bchub.com.br",            inicio:"ind-painel"   },
+    comercial:  { nome:"Camila Torres",         bola:"C", email:"camila@bchub.com.br",             inicio:"com-esteira"  },
+    juridico:   { nome:"Dra. Larissa Fontes",   bola:"L", email:"larissa@carvalhofontes.adv.br",   inicio:"jur-processos"},
+    financeiro: { nome:"Paula Rocha",           bola:"P", email:"financeiro@bchub.com.br",         inicio:"fin-comissoes"},
+    admin:      { nome:"Bruno Carvalho",        bola:"B", email:"admin@bchub.com.br",              inicio:"ges-geral"    },
+    cliente:    { nome:"Transportes Vale Norte",bola:"V", email:"contato@valenorte.com.br",        inicio:"cli-caso"     },
+    publico:    { nome:"Visitante",             bola:"·", email:"",                                inicio:"pub-cadastro" }
+  };
+
+  function grupos(){ return document.querySelectorAll(".grupo[data-ver]"); }
+
+  /* Mostra só os grupos do perfil e devolve o primeiro item visível. */
+  function montarMenu(perfil){
+    grupos().forEach(function(g){
+      var pode = g.dataset.ver.split(" ").indexOf(perfil) !== -1;
+      g.hidden = !pode;
+      var no = g.nextElementSibling;
+      while(no && no.classList.contains("item")){ no.hidden = !pode; no = no.nextElementSibling; }
+    });
+  }
+
+  function entrar(perfil){
+    var p = PERFIS[perfil] || PERFIS.indicador;
+    montarMenu(perfil);
+    document.getElementById("eu-nome").textContent = p.nome;
+    document.getElementById("eu-bola").textContent = p.bola;
+    entrada.hidden = true;
+    app.hidden = false;
+    var alvo = document.querySelector('[data-vai="' + p.inicio + '"]');
+    if (alvo) mostrar(alvo);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+
+  function sair(){
+    app.hidden = true;
+    entrada.hidden = false;
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+
+  document.querySelectorAll("[data-perfil]").forEach(function(b){
+    b.addEventListener("click", function(){ entrar(b.dataset.perfil); });
+  });
+  document.getElementById("e-entrar").addEventListener("click", function(){
+    var mail = document.getElementById("e-mail").value.trim().toLowerCase();
+    var achou = "indicador";
+    Object.keys(PERFIS).forEach(function(k){
+      if (PERFIS[k].email && PERFIS[k].email.toLowerCase() === mail) achou = k;
+    });
+    entrar(achou);
+  });
+  document.getElementById("sair").addEventListener("click", sair);
+
+  /* "Criar meu cadastro" — entra como visitante direto no wizard. */
+  document.querySelectorAll("[data-abrir-cadastro]").forEach(function(b){
+    b.addEventListener("click", function(){ entrar("publico"); });
+  });
+  document.querySelectorAll("[data-entrar]").forEach(function(b){
+    b.addEventListener("click", function(){ entrar(b.dataset.entrar); });
+  });
+
+  /* Passos do cadastro. */
+  document.querySelectorAll("[data-passo-ir]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var n = b.dataset.passoIr;
+      document.querySelectorAll("[data-etapa]").forEach(function(e){
+        e.setAttribute("data-em", String(e.dataset.etapa === n));
+      });
+      document.querySelectorAll("[data-passo]").forEach(function(p){
+        p.setAttribute("data-em", String(Number(p.dataset.passo) <= Number(n)));
+      });
+      window.scrollTo({ top: 0, behavior: "instant" });
+    });
+  });
+  var aceite = document.getElementById("cad-aceite");
+  if (aceite) aceite.addEventListener("click", function(e){
+    e.preventDefault();
+    aceite.querySelector(".cx").classList.toggle("on");
+  });
+
+  /* Quando a landing e a plataforma vivem no mesmo arquivo, é por aqui
+     que o botão "Criar meu cadastro" da página pública entra. */
+  window.BC = window.BC || {};
+  window.BC.abrirEntrada  = sair;
+  window.BC.abrirCadastro = function(){ entrar("publico"); };
+
+  /* Página do painel aberta sozinha, com #cadastro no endereço. */
+  if (location.hash === "#cadastro") entrar("publico");
+
+  function grupoDe(bt){
+    var no = bt.previousElementSibling;
+    while(no && !no.classList.contains("grupo")) no = no.previousElementSibling;
+    return no ? no.querySelector(".chapeu").textContent : "";
+  }
+  function nomeDe(bt){
+    var c = bt.cloneNode(true);
+    Array.prototype.forEach.call(c.querySelectorAll(".cont,.mod,.pt"), function(e){ e.remove(); });
+    return c.textContent.trim();
+  }
+  function mostrar(bt){
+    var nome = bt.dataset.vai;
+    telas.forEach(function(t){ t.setAttribute("data-ativa", String(t.dataset.tela === nome)); });
+    itens.forEach(function(b){ b.setAttribute("aria-current", String(b === bt)); });
+    tGrupo.textContent = grupoDe(bt);
+    tTela.textContent  = nomeDe(bt);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+  itens.forEach(function(b){ b.addEventListener("click", function(){ mostrar(b); }); });
+
+  var botoes = document.querySelectorAll("[data-nivel]");
+  botoes.forEach(function(b){
+    b.addEventListener("click", function(){
+      var n = b.dataset.nivel;
+      document.body.setAttribute("data-nivel", n);
+      botoes.forEach(function(o){ o.setAttribute("aria-pressed", String(o === b)); });
+    });
+  });
+  document.body.setAttribute("data-nivel", "completo");
+
+  document.querySelectorAll(".chavinha").forEach(function(c){
+    c.addEventListener("click", function(){ c.classList.toggle("on"); });
+  });
+})();
+</script>
